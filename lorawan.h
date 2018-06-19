@@ -1,8 +1,6 @@
 #ifndef PROBE_LORAWAN__H_
 #define PROBE_LORAWAN__H_
 
-#define LORA_RESET_PIN 12
-
 enum spread_factor {
   SF_7, SF_8, SF_9, SF_10, SF_11, SF_12
 };
@@ -18,7 +16,11 @@ typedef struct transmit_result {
 
 int getTransmitPower();
 
+int sfToNum();
 char* sfToText(spread_factor sf);
+
+void hardwareReset();
+void initLorawan();
 
 bool loraJoinIfNeeded();
 
