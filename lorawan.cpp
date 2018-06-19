@@ -23,19 +23,28 @@ char* sfToText(spread_factor sf) {
   }
 }
 
-void loraJoinIfNeeded() {
-  if(joined) return;
+void init_lorawan() {
+  // Toggle RN2483 reset
+  pinMode(LORA_RESET_PIN, OUTPUT);
+  digitalWrite(LORA_RESET_PIN, LOW);
+  delay(1000);
+  digitalWrite(LORA_RESET_PIN, HIGH);
+  delay(1000);
+}
 
-//  if(getJoinType() == OTAA) {
-//    drawFullScreenIcon(usbConnector);
-//    delay(2500);
-//  }
-
-  joined = true;
+bool loraJoinIfNeeded() {
+  if(getJoinType() == OTAA) {
+    drawFullScreenIcon(joiningNetwork);
+    lorawan.join();
+  } else {
+    if(!lorawan.personalize()) return false;
+  }
+  return true;
 }
 
 bool loraIsJoined() {
-  return joined;
+  if(lorawan.getLinkCheckGateways()>0) return true;
+  return false;
 }
 
 bool loraTransmit(spread_factor sf, transmit_result& result) {

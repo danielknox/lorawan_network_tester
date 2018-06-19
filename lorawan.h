@@ -1,6 +1,8 @@
 #ifndef PROBE_LORAWAN__H_
 #define PROBE_LORAWAN__H_
 
+#define LORA_RESET_PIN 12
+
 enum spread_factor {
   SF_7, SF_8, SF_9, SF_10, SF_11, SF_12
 };
@@ -18,7 +20,7 @@ int getTransmitPower();
 
 char* sfToText(spread_factor sf);
 
-void loraJoinIfNeeded();
+bool loraJoinIfNeeded();
 
 bool loraIsJoined();
 
