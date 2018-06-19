@@ -7,6 +7,10 @@
 
 bool joined = false;
 
+int getTransmitPower() {
+  return 14;
+}
+
 char* sfToText(spread_factor sf) {
   switch(sf) {
     case SF_7:  return "SF  7";
@@ -39,6 +43,5 @@ bool loraTransmit(spread_factor sf, transmit_result& result) {
   delay(2500);
   result.noise = 8 + sf;
   result.freq = 868.1;
-  result.power = 14;
   return sf >= SF_9;
 }

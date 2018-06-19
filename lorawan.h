@@ -12,8 +12,9 @@ enum join_type {
 typedef struct transmit_result {
   int noise;
   float freq;
-  int power;
 };
+
+int getTransmitPower();
 
 char* sfToText(spread_factor sf);
 
