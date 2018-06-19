@@ -41,6 +41,11 @@ char* sfToText(spread_factor sf) {
   }
 }
 
+/**************************************************************************/
+/*!
+    @brief  Resets RN2483 by toggling reset pin.
+*/
+/**************************************************************************/
 void hardwareReset(){
   // Toggle RN2483 reset
   pinMode(LORA_RESET_PIN, OUTPUT);
@@ -50,15 +55,25 @@ void hardwareReset(){
   delay(1000);
 }
 
+/**************************************************************************/
+/*!
+    @brief Stub externally called. Begins serial device and resets hardware
+*/
+/**************************************************************************/
 void initLorawan() {
   loraSerial.begin(57600);
   hardwareReset();
 }
 
+/**************************************************************************/
+/*!
+   @brief If join is required, lookup required type and attempt to join. OTAA will trap until joined.
+   @return Returns true if sucessfully joined (either valid ABP or successful OTAA). Returns false if ABP settings not valid.  
+*/
+/**************************************************************************/
 bool loraJoinIfNeeded() {
   if(getJoinType() == OTAA) {
     drawFullScreenIcon(joiningNetwork);
-    lorawan.setSF(sfToNum(getSpreadFactor()));
     lorawan.join();
   } else {
     if(!lorawan.personalize()) return false;
@@ -66,20 +81,33 @@ bool loraJoinIfNeeded() {
   return true;
 }
 
-bool loraIsJoined() {
+/**************************************************************************/
+/*!
+   @brief  Check if the network connection is available
+   @return Returns true if a linkcheck suggests that the network is currently connected  
+*/
+/**************************************************************************/
+bool loraNetworkConnection() {
   if(lorawan.getLinkCheckGateways()>0) return true;
   return false;
 }
 
+/**************************************************************************/
+/*!
+   @brief  Transmit the data payload
+   @return Returns true if successful transmission (not necessaryily confirmed). Else return false as their was a failure (perhaps duty cycle restriction?)
+*/
+/**************************************************************************/
 bool loraTransmit(spread_factor sf, transmit_result& result) {
   byte payload[1];
   ttn_response_t response = lorawan.sendBytes(payload, sizeof(payload), 1, true, sfToNum(getSpreadFactor()));
-  while(response == TTN_ERROR_SEND_COMMAND_FAILED || response == TTN_ERROR_UNEXPECTED_RESPONSE){
-    response = lorawan.sendBytes(payload, sizeof(payload), 1, true, sfToNum(getSpreadFactor()));
+  if(response == TTN_ERROR_SEND_COMMAND_FAILED || response == TTN_ERROR_UNEXPECTED_RESPONSE){
+    return false;
   }
-  if(response == TTN_SUCCESSFUL_RECEIVE){
+  else if(response == TTN_SUCCESSFUL_RECEIVE){
     result.noise = lorawan.getLinkCheckMargin();
     result.freq = lorawan.getFreq()/1000000;
-  }  
+    
+  }
   return true;
 }
