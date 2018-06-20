@@ -25,7 +25,11 @@ Uart Serial2 (&sercom1, GPS_SERIAL_RX, GPS_SERIAL_TX, SERCOM_RX_PAD_0, UART_TX_P
 static NMEAGPS   gps;
 static gps_fix   fix;
 
-// Interupt handler required to feed characters to GPS
+/**************************************************************************/
+/*!
+    @brief  Sercom 1 interupt handler to feed NEOGPS with characters
+*/
+/**************************************************************************/
 void SERCOM1_Handler()
 {
   Serial2.IrqHandler();

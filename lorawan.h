@@ -14,6 +14,9 @@ typedef struct transmit_result {
   float freq;
 };
 
+bool provisionOTAA(const char *appEui, const char *appKey);
+bool provisionABP(const char *devAddr, const char *nwkSKey, const char *appSKey);
+
 int getTransmitPower();
 
 int sfToNum();

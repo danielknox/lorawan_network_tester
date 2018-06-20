@@ -9,10 +9,45 @@
 
 TheThingsNetwork lorawan(RN2483_SERIAL, DEBUG_SERIAL, FREQ_PLAN);
 
+/**************************************************************************/
+/*!
+    @brief  Provisions the RN2483 with ABP keys.
+    @param  The registered appEui (do this on your LoRaWAN network server) - likely to become deprecated for joinEUI
+    @param  The registered appKey (do this on your LoRaWAN network server) - 
+    @return Keys were valid and sucessfully saved. False if not valid or not sucessfully saved.
+*/
+/**************************************************************************/
+bool provisionOTAA(const char *appEui, const char *appKey){
+  return lorawan.provision(appEui,appKey);
+}
+
+/**************************************************************************/
+/*!
+    @brief  Provisions the RN2483 with ABP keys.
+    @param  The registered devAddr (do this on your LoRaWAN network server) - 4 bytes
+    @param  The registered nwkSKey (do this on your LoRaWAN network server) - 16 bytes
+    @param  The registered appSKey (do this on your LoRaWAN network server) - 16 bytes
+    @return True if keys were valid and sucessfully saved. False if not valid or not sucessfully saved.
+*/
+/**************************************************************************/
+bool provisionABP(const char *devAddr, const char *nwkSKey, const char *appSKey){
+  return lorawan.personalize(devAddr, nwkSKey, appSKey);
+}
+
+/**************************************************************************/
+/*!
+    @brief  Returns the RN2483's current pwr level in DBm
+*/
+/**************************************************************************/
 int getTransmitPower() {
   return lorawan.getPWR();
 }
 
+/**************************************************************************/
+/*!
+    @brief  Converts a spread factor to a numerical representation
+*/
+/**************************************************************************/
 int sfToNum(spread_factor sf) {
   switch(sf) {
     case SF_7:  return 7;
@@ -25,6 +60,11 @@ int sfToNum(spread_factor sf) {
   }
 }
 
+/**************************************************************************/
+/*!
+    @brief  Converts a spread factor to a text representation
+*/
+/**************************************************************************/
 char* sfToText(spread_factor sf) {
   switch(sf) {
     case SF_7:  return "SF  7";
