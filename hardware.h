@@ -1,3 +1,5 @@
+#include "Arduino.h"
+
 // Joystick
 #define JOYSTICK_FIRE_PIN  5
 #define JOYSTICK_X_PIN A0
@@ -17,3 +19,6 @@
 // GPS Serial (NEMA device) 
 #define GPS_SERIAL_RX 11  // must define a pin that can be mapped to sercom1 and capable of RX
 #define GPS_SERIAL_TX 10  // must define a pin that can be mapped to sercom1
+
+// Battery 
+#define V_BAT_PIN A7  // Voltage divider required if not using feather.

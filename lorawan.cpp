@@ -5,6 +5,8 @@
 #include "screen.h"
 #include "settings.h"
 #include "hardware.h"
+#include "battery.h"
+#include "gps.h"
 #include <TheThingsNetwork.h>
 
 bool joined = false;
@@ -162,7 +164,44 @@ bool loraNetworkConnection() {
 */
 /**************************************************************************/
 transmit_responce loraTransmit(spread_factor sf, transmit_result& result) {
-  byte payload[1];
+  byte payload[12];
+  memset(payload, 0, sizeof(payload)); // Clear buffer
+  PayloadContents frameFormat;
+  
+  frameFormat.triggered = 0;
+
+  // Location Info
+  loc locationData;
+  if(retieveGPS(&locationData)){  
+      frameFormat.locInfo = 1;
+      int32_t LatitudeBinary = (locationData.latitude + 900000000 )/ 200;
+      int32_t LongitudeBinary = (locationData.longitude + 1800000000 )/ 400;
+      
+      payload[1] = (LatitudeBinary >> 16) & 0xFF;
+      payload[2] = (LatitudeBinary >> 8) & 0xFF;
+      payload[3] = LatitudeBinary & 0xFF;
+
+      payload[4] = (LongitudeBinary >> 16) & 0xFF;
+      payload[5] = (LongitudeBinary >> 8) & 0xFF;
+      payload[6] = LongitudeBinary & 0xFF;
+   
+      int32_t altitudeGps = locationData.altitude / 100;    
+      payload[7] = (altitudeGps >> 8) & 0xFF;
+      payload[8] = altitudeGps & 0xFF;
+    
+      payload[9] = (locationData.hdop / 1000);
+      frameFormat.locInfo = 1;
+  } else {
+    frameFormat.locInfo = 0;
+  }
+
+  // Battery Info - Pack float into int 
+  int voltage = batteryVoltage() * 100;
+  payload[10] = voltage >> 8;
+  payload[11] = voltage;
+
+  payload[0] = frameFormat.packed;
+  
   ttn_response_t response = lorawan.sendBytes(payload, sizeof(payload), 1, true, sfToNum(sf));
   switch(response) {
     case TTN_ERROR_SEND_COMMAND_FAILED:
