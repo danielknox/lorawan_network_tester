@@ -4,72 +4,69 @@
 #include "icons.h"
 #include "screen.h"
 #include "lorawan.h"
+#include <SerialCommand.h>
 
-// Cmd Sentence buffer and associated pointers
-// static const uint8_t _bufferLen = 83; // 82 + NULL
-// char _buffer[_bufferLen];
-  uint8_t _bufferLen;
-  char* _buffer;
-  char *_ptr;
-  
+SerialCommand sCmd;
+
+void setOtaaKeys(){
+  char *arg1;
+  char *arg2;
+  arg1 = sCmd.next();
+  if (arg1 == NULL) {
+    return;
+  }
+  arg2 = sCmd.next();
+  if (arg2 == NULL) {
+    return;
+  }
+
+  if(sizeof(arg1) == 16 && sizeof(arg2) == 32){
+    if(provisionOTAA(arg1,arg2)){
+      Serial.println("OK");
+      return;
+    }
+  }
+  return;
+}
+
+void setAbpKeys(){
+  char *arg1;
+  char *arg2;
+  char *arg3;
+  arg1 = sCmd.next();
+  if (arg1 == NULL) {
+    return;
+  }
+  arg2 = sCmd.next();
+  if (arg2 == NULL) {
+    return;
+  }
+  arg3 = sCmd.next();
+  if (arg3 == NULL) {
+    return;
+  }
+
+  if(sizeof(arg1) == 8 && sizeof(arg2) == 32 && sizeof(arg3) == 32){
+    if(provisionABP(arg1,arg2,arg3)){
+      Serial.println("OK");
+      return;
+    }
+  }
+  return;
+}
+
+void initUSB(){
+  sCmd.addCommand("!AT+CFGOTAA", setOtaaKeys);    
+  sCmd.addCommand("!AT+CFGABP",setAbpKeys);
+}
+
 void enterUSBMode() {
   drawFullScreenIcon(usbConnector);
-}
-
-bool setOtaaKeys(){
-  char appEuiBuffer[16];
-  char appKeyBuffer[32];
-  byte appEuibytesRead;
-  byte appKeyBytesRead;
-  appEuibytesRead = Serial.readBytesUntil(' ', appEuiBuffer, sizeof(appEuiBuffer)); 
-  if(appEuibytesRead == 16){
-      appKeyBytesRead = Serial.readBytesUntil('\r', appEuiBuffer, sizeof(appEuiBuffer)); 
-      if(appKeyBytesRead == 32){
-        return provisionOTAA(appEuiBuffer,appKeyBuffer);
-      }
-  }
-  return false;
-}
-
-bool setAbpKeys(){
-  char devAddrBuffer[8];
-  char nwkSKeyBuffer[32];
-  char appSKeyBuffer[32];
-  byte devAddrBytesRead;
-  byte nwkSKeyBytesRead;
-  byte appSKeyBytesRead;
-  
-  devAddrBytesRead = Serial.readBytesUntil(' ', devAddrBuffer, sizeof(devAddrBuffer)); 
-  if(devAddrBytesRead == 8){
-      nwkSKeyBytesRead = Serial.readBytesUntil('\r', nwkSKeyBuffer, sizeof(nwkSKeyBuffer)); 
-      if(nwkSKeyBytesRead == 32){
-        appSKeyBytesRead = Serial.readBytesUntil('\r', appSKeyBuffer, sizeof(appSKeyBuffer)); 
-        if(appSKeyBytesRead == 32){
-           return provisionABP(devAddrBuffer,nwkSKeyBuffer,appSKeyBuffer);
-        }
-      }
-  }
-  return false;
+  initUSB();
 }
 
 void usbSpin() {
-  if(Serial.available()){
-    char cmdBuffer[10];
-    byte bytesRead;
-    bytesRead = Serial.readBytesUntil(' ', cmdBuffer, sizeof(cmdBuffer));
-    if(bytesRead!=0){
-      bool validCommand;
-      // Possible valid command
-      if  (strcmp("AT+CFGOTAA",cmdBuffer) == 0){
-        validCommand = setOtaaKeys();
-      } else if (strcmp("AT+CFGABP",cmdBuffer) == 0){
-        validCommand = setAbpKeys();
-      }
-      if(validCommand){
-        Serial.println("OK");
-      }
-    }  
-  }
+  sCmd.readSerial();
 }
 
 state usbState = {
