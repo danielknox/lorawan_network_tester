@@ -6,7 +6,7 @@
     @return Current battery voltage
 */
 /**************************************************************************/
-float batteryVoltage() {
+int batteryVoltage() {
     int adcReading;
     int voltage;
     adcReading = analogRead(V_BAT_PIN);
@@ -19,7 +19,7 @@ float batteryVoltage() {
     }
     adcReading = adcReading / 10;
     adcReading *= 2;    // we divided by 2 (voltage divider), so multiply back
-    return adcReading * (3.3 / 1023.0); // ref voltage * adc resolution
+    return (adcReading * (3.3 / 1023.0)*1000); // ref voltage * adc resolution
 }
 
 /**************************************************************************/
@@ -30,9 +30,11 @@ float batteryVoltage() {
 /**************************************************************************/
 uint8_t batteryState(){
    float batterystate = batteryVoltage();
-   if(batterystate >= 4.2){
+   if(batterystate >= 4200){
       return 15;
+   } else if (batterystate < 3200){
+      return 0;
    }
-   return map(batterystate, 3.2, 4.2, 0, 15);
+   return map(batterystate, 3200, 4199, 0, 15);
 }
 
