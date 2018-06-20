@@ -9,7 +9,7 @@
 AxisJoystick joystick(SW_PIN, VRX_PIN, VRY_PIN);
 
 void initJoystick() {
-  //do nothing
+    pinMode(SW_PIN, INPUT_PULLUP); 
 }
 
 joyState readJoystick() {
