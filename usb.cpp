@@ -20,7 +20,7 @@ void setOtaaKeys(){
     return;
   }
 
-  if(sizeof(arg1) == 16 && sizeof(arg2) == 32){
+  if(strlen(arg1) == 16 && strlen(arg2) == 32){
     if(provisionOTAA(arg1,arg2)){
       Serial.println("OK");
       return;
@@ -46,7 +46,7 @@ void setAbpKeys(){
     return;
   }
 
-  if(sizeof(arg1) == 8 && sizeof(arg2) == 32 && sizeof(arg3) == 32){
+  if(strlen(arg1) == 8 && strlen(arg2) == 32 && strlen(arg3) == 32){
     if(provisionABP(arg1,arg2,arg3)){
       Serial.println("OK");
       return;
