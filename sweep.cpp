@@ -54,7 +54,7 @@ transmit_responce testSF(spread_factor sf) {
   drawSmallIcon(25, 0, 24, 24, transmitting);
   clearLine(4);
   while(1) {
-    switch(loraTransmit(sf, res)) {
+    switch(loraTransmit(false, sf, res)) {
       case TEST_SUCCESS:
         clearSpace(25, 0, 25);
         clearSpace(50, 1, 160);
@@ -70,10 +70,10 @@ transmit_responce testSF(spread_factor sf) {
         return TEST_FAIL;
 
       case TEST_ERROR:
-        if(readJoystick()==JOY_PRESSED)
-          return TEST_ERROR;
         clearSpace(25, 0, 25);
         for(int i=0; i<NO_CHANNEL_DELAY_SECONDS; i++) {
+          if(readJoystick()==JOY_PRESSED)
+            return TEST_ERROR;
           if((errorAttempt++)&1)
             drawText(8, 4, "Cancel Test?");
           else
@@ -81,6 +81,8 @@ transmit_responce testSF(spread_factor sf) {
           delay(1000);
           clearLine(4);
         }
+        if(readJoystick()==JOY_PRESSED)
+          return TEST_ERROR;
     }
   }
 }
