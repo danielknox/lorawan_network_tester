@@ -5,6 +5,7 @@
 #include <SPI.h>
 #include "hardware.h"
 #include "icons.h"
+#include "gps.h"
 
 Adafruit_ST7735 tft = Adafruit_ST7735(TFT_CS,  TFT_DC, TFT_RST);
 
@@ -68,5 +69,21 @@ void drawFullScreenIcon(const unsigned char* icon) {
 
 void drawBatteryIcon() {
   drawSmallIcon(130, 0, 24, 24, gpsConnected);
-  //TODO: add percentage level display stuff
+  //TODO: add pe
+}
+
+void drawGPSIcon() {
+  static bool wasLock = false;
+  static bool wasNoLock = false;
+  if(hasGPSLock()) {
+    if(!wasLock) {
+      drawSmallIcon(0, 0, 24, 24, gpsConnected);
+      wasNoLock = false;
+      wasLock = true;
+    }
+  } else if(!wasNoLock) {
+    drawSmallIcon(0, 0, 24, 24, gpsDisconnected);
+    wasNoLock = true;
+    wasLock = false;
+  }
 }

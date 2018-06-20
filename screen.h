@@ -20,4 +20,6 @@ void drawFullScreenIcon(const unsigned char* icon);
 
 void drawBatteryIcon();
 
+void drawGPSIcon();
+
 #endif //PROBE_SCREEN__H_
