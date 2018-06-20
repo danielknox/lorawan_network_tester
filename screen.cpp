@@ -6,6 +6,7 @@
 #include "hardware.h"
 #include "icons.h"
 #include "gps.h"
+#include "battery.h"
 
 Adafruit_ST7735 tft = Adafruit_ST7735(TFT_CS,  TFT_DC, TFT_RST);
 
@@ -77,7 +78,7 @@ void drawFullScreenIcon(const unsigned char* icon) {
 }
 
 void drawBatteryIcon() {
-  int calcBattLevel = 7; //TODO: Calc batt level from 0 to 15 (15==100%)
+  int calcBattLevel = batteryState();
   if(batteryLevel==calcBattLevel) return;
   
   drawSmallIcon(130, 0, 24, 24, battery);
