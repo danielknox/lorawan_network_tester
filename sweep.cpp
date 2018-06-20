@@ -7,7 +7,8 @@
 #include "joystick.h"
 #include "menu.h"
 
-#define DELAY_BETWEEN_TESTS   (4000)
+#define DELAY_BETWEEN_TESTS_MS    (4000)
+#define NO_CHANNEL_DELAY_SECONDS     (8)
 
 bool sfSuccess[6];
 
@@ -43,7 +44,7 @@ void initSweep() {
 }
 
 transmit_responce testSF(spread_factor sf) {
-  transmit_responce success;
+  int errorAttempt = 0;
   transmit_result res;
   char buffer[20];
   clearLine(2);
@@ -52,26 +53,41 @@ transmit_responce testSF(spread_factor sf) {
   drawText(97, 2, buffer);
   drawSmallIcon(25, 0, 24, 24, transmitting);
   clearLine(4);
-  switch( success = loraTransmit(sf, res)) {
-    case TEST_SUCCESS:
-      clearSpace(25, 0, 25);
-      clearSpace(50, 1, 160);
-      snprintf(buffer, 20, "%3d.%dMHz", (int)res.freq, (int)(res.freq*10)%10);
-      drawText(64, 1, buffer);
-      snprintf(buffer, 20, "%ddBM", res.noise);
-      drawText(5, 4, buffer);
-      break;
+  while(1) {
+    switch(loraTransmit(sf, res)) {
+      case TEST_SUCCESS:
+        clearSpace(25, 0, 25);
+        clearSpace(50, 1, 160);
+        snprintf(buffer, 20, "%3d.%dMHz", (int)res.freq, (int)(res.freq*10)%10);
+        drawText(64, 1, buffer);
+        snprintf(buffer, 20, "%ddBM", res.noise);
+        drawText(5, 4, buffer);
+        return TEST_SUCCESS;
+  
+      case TEST_FAIL:
+        clearSpace(25, 0, 25);
+        drawText(5, 4, "Fail");
+        return TEST_FAIL;
 
-    case TEST_FAIL:
-      clearSpace(25, 0, 25);
-      drawText(5, 4, "Fail");
-      break;
+      case TEST_ERROR:
+        if(readJoystick()==JOY_PRESSED)
+          return TEST_ERROR;
+        clearSpace(25, 0, 25);
+        for(int i=0; i<NO_CHANNEL_DELAY_SECONDS; i++) {
+          if((errorAttempt++)&1)
+            drawText(8, 4, "Cancel Test?");
+          else
+            drawText(2, 4, "No Free Chan.");
+          delay(1000);
+          clearLine(4);
+        }
+    }
   }
-  return success;
 }
 
 void spinSweep() {
   drawGPSIcon();
+  drawBatteryIcon();
   if(readJoystick() == JOY_PRESSED) {
     transmit_responce tr;
     clearLine(1);
@@ -85,42 +101,48 @@ void spinSweep() {
     }
     sfSuccess[0] = tr==TEST_SUCCESS;
     drawGPSIcon();
-    delay(DELAY_BETWEEN_TESTS);
+    drawBatteryIcon();
+    delay(DELAY_BETWEEN_TESTS_MS);
     if( (tr = testSF(SF_8)) == TEST_ERROR) {
       setState(&sweepErrorState);
       return;
     }
     sfSuccess[1] = tr==TEST_SUCCESS;
     drawGPSIcon();
-    delay(DELAY_BETWEEN_TESTS);
+    drawBatteryIcon();
+    delay(DELAY_BETWEEN_TESTS_MS);
     if( (tr = testSF(SF_9)) == TEST_ERROR) {
       setState(&sweepErrorState);
       return;
     }
     sfSuccess[2] = tr==TEST_SUCCESS;
     drawGPSIcon();
-    delay(DELAY_BETWEEN_TESTS);
+    drawBatteryIcon();
+    delay(DELAY_BETWEEN_TESTS_MS);
     if( (tr = testSF(SF_10)) == TEST_ERROR) {
       setState(&sweepErrorState);
       return;
     }
     sfSuccess[3] = tr==TEST_SUCCESS;
     drawGPSIcon();
-    delay(DELAY_BETWEEN_TESTS);
+    drawBatteryIcon();
+    delay(DELAY_BETWEEN_TESTS_MS);
     if( (tr = testSF(SF_11)) == TEST_ERROR) {
       setState(&sweepErrorState);
       return;
     }
     sfSuccess[4] = tr==TEST_SUCCESS;
     drawGPSIcon();
-    delay(DELAY_BETWEEN_TESTS);
+    drawBatteryIcon();
+    delay(DELAY_BETWEEN_TESTS_MS);
     if( (tr = testSF(SF_12)) == TEST_ERROR) {
       setState(&sweepErrorState);
       return;
     }
     sfSuccess[5] = tr==TEST_SUCCESS;
     drawGPSIcon();
-    delay(DELAY_BETWEEN_TESTS);
+    drawBatteryIcon();
+    delay(DELAY_BETWEEN_TESTS_MS);
     setState(&sweepResultsState);
   }
 }
@@ -176,6 +198,7 @@ void initSweepError() {
 
 void spinBackMenu() {
   drawGPSIcon();
+  drawBatteryIcon();
   switch(readJoystick()) {
     case JOY_LEFT:
       setState(&sweepState);

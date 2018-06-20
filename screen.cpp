@@ -11,6 +11,12 @@ Adafruit_ST7735 tft = Adafruit_ST7735(TFT_CS,  TFT_DC, TFT_RST);
 
 bool lineInverted[5] = {false, false, false, false, false};
 
+//gps icon state
+bool wasLock = false;
+bool wasNoLock = false;
+
+int batteryLevel = -1;
+
 void initScreen() {
   tft.initR(INITR_BLACKTAB);   // initialize a ST7735S chip, black tab
   tft.setRotation(3);
@@ -36,6 +42,9 @@ void clearScreen() {
   for(int i=0; i<5; i++) {
     clearLine(i);
   }
+  wasLock = false;
+  wasNoLock = false;
+  batteryLevel = -1;
 }
 
 void clearLine(int line) {
@@ -68,13 +77,15 @@ void drawFullScreenIcon(const unsigned char* icon) {
 }
 
 void drawBatteryIcon() {
-  drawSmallIcon(130, 0, 24, 24, gpsConnected);
-  //TODO: add pe
+  int calcBattLevel = 7; //TODO: Calc batt level from 0 to 15 (15==100%)
+  if(batteryLevel==calcBattLevel) return;
+  
+  drawSmallIcon(130, 0, 24, 24, battery);
+  tft.fillRect(133, 7, calcBattLevel, 10, getForeground(0));
+  batteryLevel = calcBattLevel;
 }
 
 void drawGPSIcon() {
-  static bool wasLock = false;
-  static bool wasNoLock = false;
   if(hasGPSLock()) {
     if(!wasLock) {
       drawSmallIcon(0, 0, 24, 24, gpsConnected);
