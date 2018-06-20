@@ -3,13 +3,8 @@
 #include <Adafruit_GFX.h>    // Core graphics library
 #include <Adafruit_ST7735.h> // Hardware-specific library
 #include <SPI.h>
-
+#include "hardware.h"
 #include "icons.h"
-
-#define TFT_CS     A5
-#define TFT_RST    A4  // you can also connect this to the Arduino reset
-                      // in which case, set this #define pin to 0!
-#define TFT_DC     A3
 
 Adafruit_ST7735 tft = Adafruit_ST7735(TFT_CS,  TFT_DC, TFT_RST);
 

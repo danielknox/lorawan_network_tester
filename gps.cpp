@@ -3,9 +3,10 @@
 #include <GPSport.h>
 #include <Streamers.h>
 #include "wiring_private.h" // pinPeripheral() function 
+#include "hardware.h"
 
 // Define additional hardware serial port on M0
-Uart Serial2 (&sercom1, 11, 10, SERCOM_RX_PAD_0, UART_TX_PAD_2);
+Uart Serial2 (&sercom1, GPS_SERIAL_RX, GPS_SERIAL_TX, SERCOM_RX_PAD_0, UART_TX_PAD_2);
 
 // Check neogps configuration
 
@@ -38,8 +39,8 @@ void SERCOM1_Handler()
 /**************************************************************************/
 void initGPS(){
   gpsPort.begin( 9600 );
-  pinPeripheral(10, PIO_SERCOM);
-  pinPeripheral(11, PIO_SERCOM);
+  pinPeripheral(GPS_SERIAL_RX, PIO_SERCOM);
+  pinPeripheral(GPS_SERIAL_TX, PIO_SERCOM);
 }
 
 /**************************************************************************/

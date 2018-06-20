@@ -1,15 +1,12 @@
 #include "joystick.h"
 
 #include <Arduino.h>
+#include "hardware.h"
 
-#define SW_PIN  5
-#define VRX_PIN A0
-#define VRY_PIN A1
-
-AxisJoystick joystick(SW_PIN, VRX_PIN, VRY_PIN);
+AxisJoystick joystick(JOYSTICK_FIRE_PIN, JOYSTICK_X_PIN, JOYSTICK_Y_PIN);
 
 void initJoystick() {
-    pinMode(SW_PIN, INPUT_PULLUP); 
+    pinMode(JOYSTICK_FIRE_PIN, INPUT_PULLUP); 
 }
 
 joyState readJoystick() {

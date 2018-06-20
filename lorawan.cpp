@@ -4,14 +4,10 @@
 #include "icons.h"
 #include "screen.h"
 #include "settings.h"
+#include "hardware.h"
 #include <TheThingsNetwork.h>
 
-#define freqPlan TTN_FP_EU868
-#define LORA_RESET_PIN 12
-#define loraSerial Serial1
-#define debugSerial Serial
-
-TheThingsNetwork lorawan(loraSerial, debugSerial, freqPlan);
+TheThingsNetwork lorawan(RN2483_SERIAL, DEBUG_SERIAL, FREQ_PLAN);
 
 int getTransmitPower() {
   return lorawan.getPWR();
@@ -48,10 +44,10 @@ char* sfToText(spread_factor sf) {
 /**************************************************************************/
 void hardwareReset(){
   // Toggle RN2483 reset
-  pinMode(LORA_RESET_PIN, OUTPUT);
-  digitalWrite(LORA_RESET_PIN, LOW);
+  pinMode(RN2483_RESET_PIN, OUTPUT);
+  digitalWrite(RN2483_RESET_PIN, LOW);
   delay(1000);
-  digitalWrite(LORA_RESET_PIN, HIGH);
+  digitalWrite(RN2483_RESET_PIN, HIGH);
   delay(1000);
 }
 
@@ -61,7 +57,7 @@ void hardwareReset(){
 */
 /**************************************************************************/
 void initLorawan() {
-  loraSerial.begin(57600);
+  RN2483_SERIAL.begin(57600);
   hardwareReset();
 }
 
