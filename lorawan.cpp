@@ -67,16 +67,18 @@ void initLorawan() {
 
 /**************************************************************************/
 /*!
-   @brief If join is required, lookup required type and attempt to join. OTAA will trap until joined.
-   @return Returns true if sucessfully joined (either valid ABP or successful OTAA). Returns false if ABP settings not valid.  
+   @brief If join is required, lookup required type and attempt to join.
+   @return Returns true if sucessfully joined (either valid ABP or successful OTAA). Returns false if failed.  
 */
 /**************************************************************************/
 bool loraJoinIfNeeded() {
+  lorawan.linkCheck(1); // We want a link check with every message sent.
+  drawFullScreenIcon(joiningNetwork);
   if(getJoinType() == OTAA) {
-    drawFullScreenIcon(joiningNetwork);
-    lorawan.join();
+    lorawan.setSF(sfToNum(getSpreadFactor()));
+    if(!lorawan.join(1)) return false; // Attempt a single join, return false if fails.
   } else {
-    if(!lorawan.personalize()) return false;
+    if(!lorawan.personalize()) return false; // Tells device to use ABP, if keys are not valid return false
   }
   return true;
 }
@@ -95,19 +97,18 @@ bool loraNetworkConnection() {
 /**************************************************************************/
 /*!
    @brief  Transmit the data payload
-   @return Returns true if successful transmission (not necessaryily confirmed). Else return false as their was a failure (perhaps duty cycle restriction?)
+   @return Returns true if successful transmission (not necessaryily confirmed), else return false as their was a failure (perhaps duty cycle restriction?)
 */
 /**************************************************************************/
 bool loraTransmit(spread_factor sf, transmit_result& result) {
   byte payload[1];
-  ttn_response_t response = lorawan.sendBytes(payload, sizeof(payload), 1, true, sfToNum(getSpreadFactor()));
+  ttn_response_t response = lorawan.sendBytes(payload, sizeof(payload), 1, true, sfToNum(sf));
   if(response == TTN_ERROR_SEND_COMMAND_FAILED || response == TTN_ERROR_UNEXPECTED_RESPONSE){
     return false;
   }
   else if(response == TTN_SUCCESSFUL_RECEIVE){
     result.noise = lorawan.getLinkCheckMargin();
     result.freq = lorawan.getFreq()/1000000;
-    
   }
   return true;
 }

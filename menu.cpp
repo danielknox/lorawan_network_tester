@@ -42,7 +42,6 @@ void menuStateLoop() {
       switch(cursor) {
         case 1:
           //setState(&surveyState);
-          Serial.println("survey");
           return;
         case 2:
           setState(&sweepState);
