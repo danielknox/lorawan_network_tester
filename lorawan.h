@@ -19,6 +19,7 @@ typedef struct transmit_result {
   int gateways;
 };
 
+bool isDeviceProvisioned();
 bool provisionOTAA(const char *appEui, const char *appKey);
 bool provisionABP(const char *devAddr, const char *nwkSKey, const char *appSKey);
 
