@@ -7,6 +7,8 @@
 #include "hardware.h"
 #include <TheThingsNetwork.h>
 
+bool joined = false;
+
 TheThingsNetwork lorawan(RN2483_SERIAL, DEBUG_SERIAL, FREQ_PLAN);
 
 /**************************************************************************/
@@ -49,15 +51,20 @@ int getTransmitPower() {
 */
 /**************************************************************************/
 int sfToNum(spread_factor sf) {
-  switch(sf) {
-    case SF_7:  return 7;
-    case SF_8:  return 8;
-    case SF_9:  return 9;
-    case SF_10: return 10;
-    case SF_11: return 11;
-    case SF_12: return 12;
-    default: return 7;
-  }
+  return (int)sf;
+//  switch(sf) {
+//    case SF_7:  return 7;
+//    case SF_8:  return 8;
+//    case SF_9:  return 9;
+//    case SF_10: return 10;
+//    case SF_11: return 11;
+//    case SF_12: return 12;
+//    default: return 7;
+//  }
+}
+
+spread_factor numToSF(int num) {
+  return num>=7 && num<=12 ? (spread_factor)num : SF_7;
 }
 
 /**************************************************************************/
@@ -108,14 +115,16 @@ void initLorawan() {
 */
 /**************************************************************************/
 bool loraJoinIfNeeded() {
-  lorawan.linkCheck(1); // We want a link check with every message sent.
+  if(joined) return true;
   drawFullScreenIcon(joiningNetwork);
+  lorawan.linkCheck(1); // We want a link check with every message sent.
   if(getJoinType() == OTAA) {
     lorawan.setSF(sfToNum(getSpreadFactor()));
     if(!lorawan.join(1)) return false; // Attempt a single join, return false if fails.
   } else {
     if(!lorawan.personalize()) return false; // Tells device to use ABP, if keys are not valid return false
   }
+  joined = true;
   return true;
 }
 
@@ -136,15 +145,22 @@ bool loraNetworkConnection() {
    @return Returns true if successful transmission (not necessaryily confirmed), else return false as their was a failure (perhaps duty cycle restriction?)
 */
 /**************************************************************************/
-bool loraTransmit(spread_factor sf, transmit_result& result) {
+transmit_responce loraTransmit(spread_factor sf, transmit_result& result) {
   byte payload[1];
   ttn_response_t response = lorawan.sendBytes(payload, sizeof(payload), 1, true, sfToNum(sf));
-  if(response == TTN_ERROR_SEND_COMMAND_FAILED || response == TTN_ERROR_UNEXPECTED_RESPONSE){
-    return false;
+  switch(response) {
+    case TTN_ERROR_SEND_COMMAND_FAILED:
+      return TEST_ERROR;
+    
+    case TTN_ERROR_UNEXPECTED_RESPONSE:
+      result.freq = lorawan.getFreq()/1000000;
+      return TEST_FAIL;
+    
+    case TTN_SUCCESSFUL_RECEIVE:
+    case TTN_SUCCESSFUL_TRANSMISSION:
+      result.freq = lorawan.getFreq()/1000000;
+      result.noise = lorawan.getLinkCheckMargin();
+      result.gateways = lorawan.getLinkCheckGateways();
+      return TEST_SUCCESS;
   }
-  else if(response == TTN_SUCCESSFUL_RECEIVE){
-    result.noise = lorawan.getLinkCheckMargin();
-    result.freq = lorawan.getFreq()/1000000;
-  }
-  return true;
 }

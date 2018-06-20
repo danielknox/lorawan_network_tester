@@ -2,16 +2,21 @@
 #define PROBE_LORAWAN__H_
 
 enum spread_factor {
-  SF_7, SF_8, SF_9, SF_10, SF_11, SF_12
+  SF_7 = 7, SF_8, SF_9, SF_10, SF_11, SF_12
 };
 
 enum join_type {
   OTAA, ABP
 };
 
+enum transmit_responce {
+  TEST_SUCCESS, TEST_FAIL, TEST_ERROR
+};
+
 typedef struct transmit_result {
   int noise;
   float freq;
+  int gateways;
 };
 
 bool provisionOTAA(const char *appEui, const char *appKey);
@@ -29,6 +34,6 @@ bool loraJoinIfNeeded();
 
 bool loraIsJoined();
 
-bool loraTransmit(spread_factor sf, transmit_result& result);
+transmit_responce loraTransmit(spread_factor sf, transmit_result& result);
 
 #endif //PROBE_LORAWAN__H_
