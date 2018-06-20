@@ -5,6 +5,13 @@
 #include "screen.h"
 #include "lorawan.h"
 
+// Cmd Sentence buffer and associated pointers
+// static const uint8_t _bufferLen = 83; // 82 + NULL
+// char _buffer[_bufferLen];
+  uint8_t _bufferLen;
+  char* _buffer;
+  char *_ptr;
+  
 void enterUSBMode() {
   drawFullScreenIcon(usbConnector);
 }
@@ -46,7 +53,7 @@ bool setAbpKeys(){
 }
 
 void usbSpin() {
-  if(Serial.available){
+  if(Serial.available()){
     char cmdBuffer[10];
     byte bytesRead;
     bytesRead = Serial.readBytesUntil(' ', cmdBuffer, sizeof(cmdBuffer));
