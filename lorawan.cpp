@@ -13,6 +13,22 @@ TheThingsNetwork lorawan(RN2483_SERIAL, DEBUG_SERIAL, FREQ_PLAN);
 
 /**************************************************************************/
 /*!
+    @brief  Check if the device has the required keys.
+    @return If device is currently provisioned for the currently selected join mode (OTAA or ABP)
+*/
+/**************************************************************************/
+bool isDeviceProvisioned(){
+  if(getJoinType() == OTAA) {
+    char currentAppEUI[8];
+    if(lorawan.getAppEui(currentAppEUI,8)==8) return true; // We can only check if there is an appEUI, the RN2483 does not let us read keys.
+  } else {
+    if(lorawan.personalize()) return true;
+  }
+  return false;
+}
+
+/**************************************************************************/
+/*!
     @brief  Provisions the RN2483 with ABP keys.
     @param  The registered appEui (do this on your LoRaWAN network server) - likely to become deprecated for joinEUI
     @param  The registered appKey (do this on your LoRaWAN network server) - 
