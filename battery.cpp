@@ -1,5 +1,11 @@
 #include "hardware.h"
 
+/**************************************************************************/
+/*!
+    @brief  Get raw battery voltage
+    @return Current battery voltage
+*/
+/**************************************************************************/
 float batteryVoltage() {
     int adcReading;
     int voltage;
@@ -15,3 +21,18 @@ float batteryVoltage() {
     adcReading *= 2;    // we divided by 2 (voltage divider), so multiply back
     return adcReading * (3.3 / 1023.0); // ref voltage * adc resolution
 }
+
+/**************************************************************************/
+/*!
+    @brief  Gets the state the battery level.
+    @return 0 - 15. 15 is full (or powered), 0 is empty.
+*/
+/**************************************************************************/
+uint8_t batteryState(){
+   float batterystate = batteryVoltage();
+   if(batterystate >= 4.2){
+      return 15;
+   }
+   return map(batterystate, 3.2, 4.2, 0, 15);
+}
+
