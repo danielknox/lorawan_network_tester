@@ -210,7 +210,7 @@ transmit_responce loraTransmit(bool manual, spread_factor sf, transmit_result& r
   }
 
   // Battery Info - Pack float into int 
-  int voltage = batteryVoltage() * 100;
+  int voltage = batteryVoltage();
   payload[10] = voltage >> 8;
   payload[11] = voltage;
 
