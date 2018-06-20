@@ -1,6 +1,14 @@
 #include "gps.h"
+
+//NeoGPS Configurations. Must be before NMEAGPS.h include!
+#define gpsPort Serial2
+#define GPS_PORT_NAME "gpsSerial"
+#define DEBUG_PORT Serial
+#define NMEAGPS_INTERRUPT_PROCESSING
+#define GPS_FIX_ALTITUDE
+#define GPS_FIX_HDOP
+
 #include <NMEAGPS.h>
-#include <GPSport.h>
 #include <Streamers.h>
 #include "wiring_private.h" // pinPeripheral() function 
 #include "hardware.h"
