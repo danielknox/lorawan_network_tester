@@ -9,6 +9,20 @@
 #include "gps.h"
 #include <TheThingsNetwork.h>
 
+typedef union {
+  struct {
+    byte triggered : 1;   // Triggered by button press
+    byte locInfo   : 1;   // Contains location data
+    byte spare1    : 1;   // Spare
+    byte spare2    : 1;   // Spare
+    byte spare3    : 1;   // Spare
+    byte spare4    : 1;   // Spare
+    byte spare5    : 1;   // Spare
+    byte spare6    : 1;   // Spare
+  }; 
+  uint8_t packed; 
+} PayloadContents;
+
 bool joined = false;
 
 TheThingsNetwork lorawan(RN2483_SERIAL, DEBUG_SERIAL, FREQ_PLAN);
@@ -163,12 +177,12 @@ bool loraNetworkConnection() {
    @return Returns true if successful transmission (not necessaryily confirmed), else return false as their was a failure (perhaps duty cycle restriction?)
 */
 /**************************************************************************/
-transmit_responce loraTransmit(spread_factor sf, transmit_result& result) {
+transmit_responce loraTransmit(bool manual, spread_factor sf, transmit_result& result) {
   byte payload[12];
   memset(payload, 0, sizeof(payload)); // Clear buffer
   PayloadContents frameFormat;
   
-  frameFormat.triggered = 0;
+  frameFormat.triggered = manual ? 1 : 0;
 
   // Location Info
   loc locationData;

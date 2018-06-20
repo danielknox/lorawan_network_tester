@@ -10,20 +10,6 @@ enum join_type {
   OTAA, ABP
 };
 
-typedef union {
-  struct {
-    byte triggered : 1;   // Triggered by button press
-    byte locInfo   : 1;   // Contains location data
-    byte spare1    : 1;   // Spare
-    byte spare2    : 1;   // Spare
-    byte spare3    : 1;   // Spare
-    byte spare4    : 1;   // Spare
-    byte spare5    : 1;   // Spare
-    byte spare6    : 1;   // Spare
-  }; 
-  uint8_t packed; 
-} PayloadContents;
-
 enum transmit_responce {
   TEST_SUCCESS, TEST_FAIL, TEST_ERROR
 };
@@ -50,6 +36,6 @@ bool loraJoinIfNeeded();
 
 bool loraIsJoined();
 
-transmit_responce loraTransmit(spread_factor sf, transmit_result& result);
+transmit_responce loraTransmit(bool manual, spread_factor sf, transmit_result& result);
 
 #endif //PROBE_LORAWAN__H_
