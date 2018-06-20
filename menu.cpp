@@ -41,7 +41,7 @@ void menuStateLoop() {
     case JOY_PRESSED:
       switch(cursor) {
         case 1:
-          //setState(&surveyState);
+          setState(&surveyState);
           return;
         case 2:
           setState(&sweepState);
