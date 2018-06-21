@@ -25,7 +25,7 @@ Hardware specific changes can be made to the "hardware.h" file. Upload this sket
 
 #### Menu
 
-On boot you will be presented with the [Menu](#Menu-Image) screen containing the following functions:
+On boot you will be presented with the "Menu" screen containing the following functions:
   - [Survey](#survey) 
   - [Sweep](#sweep)  
   - [Settings](#settings)  
@@ -36,20 +36,45 @@ You can move between menu items by pushing up/down on the joystick. Click the jo
 ![Menu Image](https://raw.githubusercontent.com/danielknox/lorawan_network_tester/master/images/menu.png "Fig 1. Menu")
   
 #### Survey
-"Survey" is a mode that utlises the current device settings to perform periodic or manual transmissions. If the device has been requested to connect using "Over The Air Activation", and is currently not connected to a network, upon entering this mode the device will first attempt to join a network using the internal device keys. "Survey" mode is great for performing "war driving" tests.
+"Survey" is a mode that utlises the current device [settings](#settings) to perform periodic or manual transmissions. If the device has been configured to join using "Over The Air Activation", and is currently not connected to a network, entering this mode the device will first attempt to join a network using the internal device keys. "Survey" mode is great for performing "war driving" tests.
 
 ![Survey Image](https://raw.githubusercontent.com/danielknox/lorawan_network_tester/master/images/survey.png "Fig 2. Survey")
 
+1. GPS Status (Disconnected)
+2. Spread Factor of current transmission
+3. Battery Status (Half-full)
+4. The current operation frequency of the device
+5. The current transmission power of the device
+6. "Press to Ccan" when in manual mode / Gateway Results when TX successful ([Sweep](#sweep), See 3 and 8)
+
+Pushing the joystick to the left when in survey mode will return the device to the [menu](#menu) 
+
 #### Sweep
-"Sweep" is a mode that causes the device to send a transmission at each spreadfactor (SF7 - SF12, i.e. DR5 - D0); this collection of transmissions is referred to as a 'test'. This mode is useful for testing connectivity at a specific location (e.g. before deploying a sensor). If the device has been requested to connect using "Over The Air Activation", and is currently not connected to a network, upon entering this mode the device will first attempt to join a network using the internal device keys. Because of duty cycle limitations, the device may have to wait for a free-channel before it can attempt a transmission at a specific spreadfactor. During this time the device will state "No Free Chan. Cancel Test?", clicking the joystick will cancel the current and subsequent transmissions left in the test.
+"Sweep" is a mode that causes the device to send a transmission at each spreadfactor (SF7 - SF12, i.e. DR5 - D0); this collection of transmissions is referred to as a 'test'. This mode is useful for testing connectivity at a specific location (e.g. before deploying a sensor). If the device has been configured to join using "Over The Air Activation", and is currently not connected to a network, entering this mode the device will first attempt to join a network using the internal device keys. Because of duty cycle limitations, the device may have to wait for a free-channel before it can attempt a transmission at a specific spreadfactor. During this time the device will state "No Free Chan. Cancel Test?", clicking the joystick will cancel the current and subsequent transmissions left in the test.
 
 ![Sweep Image](https://raw.githubusercontent.com/danielknox/lorawan_network_tester/master/images/sweep.png "Fig 3. Sweep")
+
+1. GPS Status (Connected)
+2. Spread Factor of current transmission
+3. The current link margin, calculated from the signal recieve strength
+4. The device is actively transmitting
+5. Battery Status (Half-full)
+6. The current operation frequency of the device
+7. The current transmission power of the device
+8. The number of gateways that sucessfully recieved the message 
 
 At the end of the test the results will be displayed on the screen. Transmissions that were successful and therefore recieved an acknowledgement from a network server will be presented as black text on a white background. Transmissions that were not successful, because they did not recieve an acknowledgement, will be presented as white text on a black background.  
 
 From this menu you can either push left on the joystick to intiate a new test or push right to return to the main menu.
 
 ![Sweep Results](https://raw.githubusercontent.com/danielknox/lorawan_network_tester/master/images/sweep%20results.png "Fig 4. Sweep Results")
+
+1. GPS Status (Connected)
+2. Spreadfactors that were not acknowledged
+3. Start a new test
+4. Battery Status (Half-full)
+5. Spreadfactors that were acknowledged
+6. Return to [menu](#menu)
 
 #### Settings
 "Settings" lets you configure the runtime settings of the device. Upon entering this menu option you will be presented with the following configurable settings:
@@ -116,7 +141,4 @@ GNU Ver 3.
 [Adafruit ST7735]: https://github.com/adafruit/Adafruit-ST7735-Library
 [Adafruit SAMD]: https://learn.adafruit.com/adafruit-feather-m0-basic-proto/using-with-arduino-ide
 [Spreadfactor video]: https://www.youtube.com/watch?v=B580NvdXtjs
-
-
-
 
