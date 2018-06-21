@@ -140,6 +140,15 @@ void initLorawan() {
   hardwareReset();
 }
 
+
+/**************************************************************************/
+/*!
+    @brief Get HWEUI
+*/
+/**************************************************************************/
+size_t getHweui(char *buffer, size_t size) {
+  return lorawan.getHardwareEui(buffer,size);
+}
 /**************************************************************************/
 /*!
    @brief If join is required, lookup required type and attempt to join.

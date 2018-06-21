@@ -61,9 +61,22 @@ void setAbpKeys(){
   return;
 }
 
+void getHweui(){
+  char buffer[16];
+  if(getHweui(buffer, 16)>0){
+    Serial.println("OK");
+    Serial.print("Dev EUI: ");
+    Serial.println(buffer);
+    return;
+  }
+  Serial.println("RN2483 FAILURE");
+  return;
+}
+
 void initUSB(){
   sCmd.addCommand("!AT+CFGOTAA", setOtaaKeys);    
-  sCmd.addCommand("!AT+CFGABP",setAbpKeys);
+  sCmd.addCommand("!AT+CFGABP", setAbpKeys);
+  sCmd.addCommand("!AT+HWEUI?", getHweui);
 }
 
 void enterUSBMode() {
