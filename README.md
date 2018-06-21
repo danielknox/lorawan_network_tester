@@ -22,29 +22,40 @@ This is designed to work with the following hardware:
 Hardware specific changes can be made to the "hardware.h" file. Upload this sketch to your Feather M0 using the Arduino IDE. Your IDE must have the [Adafruit SAMD] boards support added for this to work.  
 
 ## Instructions for Use
-On boot you will be presented with the "Menu" screen containing the following functions:
-  - [Survey](#survey)
+
+#### Menu
+
+On boot you will be presented with the [Menu](#Menu-Image) screen containing the following functions:
+  - [Survey](#survey) 
   - [Sweep](#sweep)  
   - [Settings](#settings)  
   - [USB](#usb)
  
 You can move between menu items by pushing up/down on the joystick. Click the joystick to activate the currently selected item. "Survey" and "Sweep" will not be available (marked with an 'X', rather than '>') if the required LoRaWAN network keys for the currently selected join mode are not present; see [USB](#usb) and [Settings - join](#join)
+
+![Menu Image](https://raw.githubusercontent.com/danielknox/lorawan_network_tester/master/images/menu.png "Fig 1. Menu")
   
 #### Survey
 "Survey" is a mode that utlises the current device settings to perform periodic or manual transmissions. If the device has been requested to connect using "Over The Air Activation", and is currently not connected to a network, upon entering this mode the device will first attempt to join a network using the internal device keys. "Survey" mode is great for performing "war driving" tests.
 
+![Survey Image](https://raw.githubusercontent.com/danielknox/lorawan_network_tester/master/images/survey.png "Fig 2. Survey")
+
 #### Sweep
 "Sweep" is a mode that causes the device to send a transmission at each spreadfactor (SF7 - SF12, i.e. DR5 - D0); this collection of transmissions is referred to as a 'test'. This mode is useful for testing connectivity at a specific location (e.g. before deploying a sensor). If the device has been requested to connect using "Over The Air Activation", and is currently not connected to a network, upon entering this mode the device will first attempt to join a network using the internal device keys. Because of duty cycle limitations, the device may have to wait for a free-channel before it can attempt a transmission at a specific spreadfactor. During this time the device will state "No Free Chan. Cancel Test?", clicking the joystick will cancel the current and subsequent transmissions left in the test.
+
+![Sweep Image](https://raw.githubusercontent.com/danielknox/lorawan_network_tester/master/images/sweep.png "Fig 3. Sweep")
 
 At the end of the test the results will be displayed on the screen. Transmissions that were successful and therefore recieved an acknowledgement from a network server will be presented as black text on a white background. Transmissions that were not successful, because they did not recieve an acknowledgement, will be presented as white text on a black background.  
 
 From this menu you can either push left on the joystick to intiate a new test or push right to return to the main menu.
 
+![Sweep Results](https://raw.githubusercontent.com/danielknox/lorawan_network_tester/master/images/sweep%20results.png "Fig 4. Sweep Results")
+
 #### Settings
 "Settings" lets you configure the runtime settings of the device. Upon entering this menu option you will be presented with the following configurable settings:
   - [Join](#join)
   - [SF](#sf)  
-  - [TX IVL](#TX%20IVL)
+  - [TX IVL](#TX%-IVL)
   - [Exit](#Exit)
   
 Pushing right or left on the joystick of a currently selected setting will alter that setting. Pushing up or down on the joystick allows you to move between different settings. 
@@ -70,10 +81,10 @@ Exits the "Settings" menu if the joystick is clicked when this option is current
 
 The commands available in this mode are:
 
-- [!AT+CFGOTAA](#!AT+CFGOTAA%20[appEui]%20[appKey])
-- [!AT+CFGABP](!AT+CFGOTAA%20[devAddr]%20[NwksKey]%20[AppsKey])
-- [!AT+HWEUI?](!AT+HWEUI?)
-- [!AT+EXIT](!AT+EXIT)
+- [!AT+CFGOTAA](#!AT+CFGOTAA-[appeui]-[appkey])
+- [!AT+CFGABP](#!AT+CFGOTAA-[devAddr]-[nwkskey]-[appskey])
+- [!AT+HWEUI?](#!at+hweui?)
+- [!AT+EXIT](#!at+exit)
 
 When a command expects one or more parameters, the start of each parameter is delimited with a space. A new line and carriage return is required to send the command to the device.
 
@@ -105,4 +116,7 @@ GNU Ver 3.
 [Adafruit ST7735]: https://github.com/adafruit/Adafruit-ST7735-Library
 [Adafruit SAMD]: https://learn.adafruit.com/adafruit-feather-m0-basic-proto/using-with-arduino-ide
 [Spreadfactor video]: https://www.youtube.com/watch?v=B580NvdXtjs
+
+
+
 
