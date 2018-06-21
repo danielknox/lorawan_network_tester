@@ -102,9 +102,66 @@ void saveSettings(){
   flash_store.write(deviceSettings);
 }
 
-#define POINTER_OFFSET    (4)
+
 
 int settingsCursor = 1;
+
+void initExitState() {
+  setLineInverted(0, true);
+  setLineInverted(1, true);
+  setLineInverted(2, true);
+  setLineInverted(3, true);
+  setLineInverted(4, true);
+  clearScreen();
+
+  drawText(38, 1, "Save As");
+  drawText(32, 2, "Default?");
+  drawText(28+80, 4, "No");
+  setLineInverted(4, false);
+  clearSpace(0,4, 80);
+  drawText(22, 4, "Yes");
+  settingsCursor = 0;
+}
+
+void loopExitState() {
+  switch(readJoystick()) {
+    case JOY_PRESSED:
+      if(!settingsCursor) //if YES
+        saveSettings();
+      setState(&menuState);
+      break;
+    case JOY_LEFT:
+      if(settingsCursor) { //if NO
+        setLineInverted(4, true);
+        clearSpace(80, 4, 160);
+        drawText(28+80, 4, "No");
+        setLineInverted(4, false);
+        clearSpace(0, 4, 80);
+        drawText(22, 4, "Yes");
+        settingsCursor = 0;
+      }
+      break;
+    case JOY_RIGHT:
+      if(!settingsCursor) { //if YES
+        setLineInverted(4, false);
+        clearSpace(80, 4, 160);
+        drawText(28+80, 4, "No");
+        setLineInverted(4, true);
+        clearSpace(0, 4, 80);
+        drawText(22, 4, "Yes");
+        settingsCursor = 1;
+      }
+      break;
+  }
+}
+
+state settingsExitState = {
+  &initExitState,
+  &loopExitState,
+  NULL
+};
+
+#define POINTER_OFFSET    (4)
 
 void showJoin() {
   clearSpace(68,1,160);
@@ -234,7 +291,7 @@ void settingsStateLoop() {
   switch(joy) {
     case JOY_PRESSED:
       if(settingsCursor == 4) {
-        setState(&menuState);
+        setState(&settingsExitState);
         return;
       }
       break;
@@ -285,12 +342,8 @@ void settingsStateLoop() {
   }
 }
 
-void exitSettings() {
-  //save
-}
-
 state settingsState = { 
   &initSettingsState,
   &settingsStateLoop,
-  &exitSettings
+  NULL
 };
