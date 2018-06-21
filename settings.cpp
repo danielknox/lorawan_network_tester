@@ -102,10 +102,15 @@ void saveSettings(){
   flash_store.write(deviceSettings);
 }
 
-
-
+//used by both settings menu and exit/save
 int settingsCursor = 1;
 
+
+/**************************************************************************/
+/*!
+    @brief  Sets the screen up for settings exit.
+*/
+/**************************************************************************/
 void initExitState() {
   setLineInverted(0, true);
   setLineInverted(1, true);
@@ -123,6 +128,12 @@ void initExitState() {
   settingsCursor = 0;
 }
 
+
+/**************************************************************************/
+/*!
+    @brief  Checks for joystick commands and updates screen accordingly
+*/
+/**************************************************************************/
 void loopExitState() {
   switch(readJoystick()) {
     case JOY_PRESSED:
@@ -163,6 +174,12 @@ state settingsExitState = {
 
 #define POINTER_OFFSET    (4)
 
+
+/**************************************************************************/
+/*!
+    @brief  Draws the join type value to the screen plus joystick widgets if necassary
+*/
+/**************************************************************************/
 void showJoin() {
   clearSpace(68,1,160);
   switch(getJoinType()) {
@@ -179,6 +196,11 @@ void showJoin() {
   }
 }
 
+/**************************************************************************/
+/*!
+    @brief  Draws the spread factor value to the screen plus joystick widgets if necassary
+*/
+/**************************************************************************/
 void showSF() {
   clearSpace(44,2,160);
   drawText(44+8+12+8, 2, sfToText(getSpreadFactor()));
@@ -195,6 +217,14 @@ void showSF() {
 
 const unsigned int intervals[10] = {MANUAL_TRANSMIT, SECOND, 2*SECOND, 5*SECOND, 10*SECOND, 30*SECOND, MINUTE, 2*MINUTE, 5*MINUTE, 10*MINUTE};
 
+/**************************************************************************/
+/*!
+    @brief  For a given time interval, returns the next interval strictly greater. If the provided interval is equal to or larger
+    than the largest permitted, the maximum interval is returned.
+    @param The current time interval
+    @return The next larger interval or the maximum allowed interval
+*/
+/**************************************************************************/
 unsigned int nextInterval(unsigned int curr) {
   for(int i=0; i<9; i++)
     if(intervals[i]>curr)
@@ -202,6 +232,15 @@ unsigned int nextInterval(unsigned int curr) {
   return intervals[9];
 }
 
+
+/**************************************************************************/
+/*!
+    @brief  For a given time interval, returns the next interval strictly smaller. If the provided interval is equal to or less than
+    than the smallest permitted, the minimum interval is returned.
+    @param The current time interval
+    @return The next smaller interval or the minimum allowed interval
+*/
+/**************************************************************************/
 unsigned int prevInterval(unsigned int curr) {
   for(int i=9; i>0; i--)
     if(intervals[i]<curr)
@@ -209,6 +248,13 @@ unsigned int prevInterval(unsigned int curr) {
   return intervals[0];
 }
 
+/**************************************************************************/
+/*!
+    @brief  Finds the nearest valid interval that is not larger than the provided value
+    @param The current time interval
+    @return The nearest valid interval
+*/
+/**************************************************************************/
 unsigned int nearestInterval(unsigned int curr) {
   for(int i=9; i>0; i--)
     if(intervals[i]<=curr)
@@ -216,6 +262,13 @@ unsigned int nearestInterval(unsigned int curr) {
   return intervals[0];
 }
 
+/**************************************************************************/
+/*!
+    @brief  Ease of use function to convert valid time intervals to text. Returns NULL on invalid intervals
+    @param A valid time interval
+    @return A text representation or NULL
+*/
+/**************************************************************************/
 char* intervalToText(unsigned int curr) {
   switch(curr) {
     case MANUAL_TRANSMIT: return "Man";
@@ -228,9 +281,15 @@ char* intervalToText(unsigned int curr) {
     case 2*MINUTE: return "2m";
     case 5*MINUTE: return "5m";
     case 10*MINUTE: return "10m";
+    default: return NULL;
   }
 }
 
+/**************************************************************************/
+/*!
+    @brief  Draws the transmission interval value to the screen plus joystick widgets if necassary
+*/
+/**************************************************************************/
 void showTxIvl() {
   clearSpace(92,3,160);
   unsigned int interval = nearestInterval(getTransmitInterval());
@@ -243,6 +302,11 @@ void showTxIvl() {
   }
 }
 
+/**************************************************************************/
+/*!
+    @brief  Sets up the screen for the Settings UI
+*/
+/**************************************************************************/
 void initSettingsState() {
   settingsCursor = 1;
   setLineInverted(0, false);
@@ -263,6 +327,12 @@ void initSettingsState() {
   showTxIvl();
 }
 
+
+/**************************************************************************/
+/*!
+    @brief  Ease of use function to redraw the value portion of a particular line.
+*/
+/**************************************************************************/
 void redrawSettings(int line) {
   switch(line) {
     case 1:
@@ -277,6 +347,11 @@ void redrawSettings(int line) {
   }
 }
 
+/**************************************************************************/
+/*!
+    @brief  Moves the curor to a new location
+*/
+/**************************************************************************/
 void moveCursorSettings(int newLine) {
   clearSpace(0,settingsCursor,20);
   int oldLine = settingsCursor;
@@ -286,6 +361,11 @@ void moveCursorSettings(int newLine) {
   redrawSettings(newLine);
 }
 
+/**************************************************************************/
+/*!
+    @brief  Checks the joystick for actions and updates the screen and settings accordingly
+*/
+/**************************************************************************/
 void settingsStateLoop() {
   joyState joy = readJoystick();
   switch(joy) {
