@@ -38,7 +38,7 @@ void initSurvey() {
   if(getTransmitInterval())
     nextPing = millis() + 1000;
   else
-    drawText(2, 3, "Press to Scan");
+    drawText(2, 4, "Press to Scan");
 }
 
 /**************************************************************************/
