@@ -15,7 +15,7 @@ Required Libraries!
   - [NeoGPS]
   - [RN2483] (Forked from arduino-device-lib by TTN)
   - [FlashStorage]
-  - [Arduino Serial Command]
+  - [Arduino Serial Command] (Already included)
   - [Adafruit GFX]
   - [Adafruit ST7735]
 
