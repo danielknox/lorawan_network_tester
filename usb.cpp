@@ -5,6 +5,7 @@
 #include "screen.h"
 #include "lorawan.h"
 #include "SerialCommand.h"
+#include "menu.h"
 
 SerialCommand sCmd;
 
@@ -73,10 +74,16 @@ void getHweui(){
   return;
 }
 
+void goToMenu() {
+  Serial.println("Exiting");
+  setState(&menuState);
+}
+
 void initUSB(){
   sCmd.addCommand("!AT+CFGOTAA", setOtaaKeys);    
   sCmd.addCommand("!AT+CFGABP", setAbpKeys);
   sCmd.addCommand("!AT+HWEUI?", getHweui);
+  sCmd.addCommand("!AT+EXIT", goToMenu);
 }
 
 void enterUSBMode() {
