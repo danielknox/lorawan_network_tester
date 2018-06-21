@@ -9,6 +9,11 @@
 
 long nextPing;
 
+/**************************************************************************/
+/*!
+    @brief  Sets up the screen for survey mode
+*/
+/**************************************************************************/
 void initSurvey() {
   if(!loraJoinIfNeeded()) {
     setState(&menuState);
@@ -36,6 +41,12 @@ void initSurvey() {
     drawText(2, 3, "Press to Scan");
 }
 
+/**************************************************************************/
+/*!
+    @brief  Sends a single lorawan transmission. Updates the screen with the results.
+    @param Whether the ping request was made by the user or by the automatic interval
+*/
+/**************************************************************************/
 void doPing(boolean manual) {
   drawSmallIcon(25, 0, 24, 24, transmitting);
   transmit_result res;
@@ -65,6 +76,11 @@ void doPing(boolean manual) {
   }
 }
 
+/**************************************************************************/
+/*!
+    @brief  Checks for the timer interval in automatic mode of joystick press in manual mode. Also updates the gps + battery icon.
+*/
+/**************************************************************************/
 void spinSurvey() {
   drawGPSIcon();
   drawBatteryIcon();

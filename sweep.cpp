@@ -28,6 +28,11 @@ state sweepErrorState = {
   NULL
 };
 
+/**************************************************************************/
+/*!
+    @brief  Sets up the screen for sweep mode
+*/
+/**************************************************************************/
 void initSweep() {
   if(!loraJoinIfNeeded()) {
     setState(&menuState);
@@ -46,6 +51,13 @@ void initSweep() {
   drawText(50, 2, "Sweep");
 }
 
+/**************************************************************************/
+/*!
+    @brief  Sends a single lorawan transmission. Updates the screen with the results.
+    @param sf The spread factor to test at.
+    @result The overal result of the transmission.
+*/
+/**************************************************************************/
 transmit_responce testSF(spread_factor sf) {
   int errorAttempt = 0;
   transmit_result res;
@@ -92,6 +104,11 @@ transmit_responce testSF(spread_factor sf) {
   }
 }
 
+/**************************************************************************/
+/*!
+    @brief  Checks for a joystick press then begins a sweep test through all spread factors. Also updates the gps + battery icon.
+*/
+/**************************************************************************/
 void spinSweep() {
   drawGPSIcon();
   drawBatteryIcon();
@@ -154,6 +171,13 @@ void spinSweep() {
   }
 }
 
+/**************************************************************************/
+/*!
+    @brief  Ease-of-use function to convert array indicies to spread factor text.
+    @param index the array index
+    @return The corresponding text
+*/
+/**************************************************************************/
 char* sfIndexToText(int index) {
   switch(index) {
     case 0:  return "SF 7";
@@ -166,6 +190,11 @@ char* sfIndexToText(int index) {
   }
 }
 
+/**************************************************************************/
+/*!
+    @brief  Sets up the screen to display the test results
+*/
+/**************************************************************************/
 void initSweepResults() {
   setLineInverted(0, true);
   setLineInverted(1, false);
@@ -189,6 +218,11 @@ void initSweepResults() {
   drawText(99, 4, "Menu>");
 }
 
+/**************************************************************************/
+/*!
+    @brief  Sets up the screen to display an error if the sweep test errors.
+*/
+/**************************************************************************/
 void initSweepError() {
   setLineInverted(0, true);
   setLineInverted(1, false);
@@ -203,6 +237,11 @@ void initSweepError() {
   drawText(99, 4, "Menu>");
 }
 
+/**************************************************************************/
+/*!
+    @brief  A simple spin that monitors for joystick input. Transitions to initial sweep state, or back to main menu.
+*/
+/**************************************************************************/
 void spinBackMenu() {
   drawGPSIcon();
   drawBatteryIcon();
