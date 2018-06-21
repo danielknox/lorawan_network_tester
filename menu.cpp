@@ -15,6 +15,21 @@ int cursor;
 
 /**************************************************************************/
 /*!
+   @brief  Ease of use function for moving the curso on screen
+*/
+/**************************************************************************/
+void moveCursor(int newLine) {
+  clearSpace(0,cursor,20);
+  cursor = newLine;
+  if((cursor == 1 || cursor == 2) && !isDeviceProvisioned()) {
+    drawText(POINTER_OFFSET,cursor,"X");
+  } else {
+    drawText(POINTER_OFFSET,cursor,">");
+  }
+}
+
+/**************************************************************************/
+/*!
    @brief  Sets up the screen for the main menu
 */
 /**************************************************************************/
@@ -31,18 +46,9 @@ void initMenuState() {
   drawText(20,2,"Sweep");
   drawText(20,3,"Settings");
   drawText(20,4,"USB");
-  drawText(POINTER_OFFSET,cursor,">");
-}
-
-/**************************************************************************/
-/*!
-   @brief  Ease of use function for moving the curso on screen
-*/
-/**************************************************************************/
-void moveCursor(int newLine) {
-  clearSpace(0,cursor,20);
-  cursor = newLine;
-  drawText(POINTER_OFFSET,cursor,">");
+  
+  cursor = 0;
+  moveCursor(1);
 }
 
 /**************************************************************************/
@@ -56,11 +62,17 @@ void menuStateLoop() {
     case JOY_PRESSED:
       switch(cursor) {
         case 1:
-          setState(&surveyState);
-          return;
+          if(isDeviceProvisioned()) {
+            setState(&surveyState);
+            return;
+          }
+          break;
         case 2:
-          setState(&sweepState);
-          return;
+          if(isDeviceProvisioned()) {
+            setState(&sweepState);
+            return;
+          }
+          break;
         case 3:
           setState(&settingsState);
           return;
