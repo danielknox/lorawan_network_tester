@@ -9,6 +9,11 @@
 
 SerialCommand sCmd;
 
+/**************************************************************************/
+/*!
+    @brief  Called by SerialCommand to set the OTAA keys.
+*/
+/**************************************************************************/
 void setOtaaKeys(){
   char *arg1;
   char *arg2;
@@ -32,6 +37,11 @@ void setOtaaKeys(){
   return;
 }
 
+/**************************************************************************/
+/*!
+    @brief  Called by SerialCommand to set the ABP keys.
+*/
+/**************************************************************************/
 void setAbpKeys(){
   char *arg1;
   char *arg2;
@@ -62,6 +72,11 @@ void setAbpKeys(){
   return;
 }
 
+/**************************************************************************/
+/*!
+    @brief  Called by SerialCommand upon a request for the hardware EUI.
+*/
+/**************************************************************************/
 void getHweui(){
   char buffer[16];
   if(getHweui(buffer, 16)>0){
@@ -74,24 +89,37 @@ void getHweui(){
   return;
 }
 
+/**************************************************************************/
+/*!
+    @brief  called by SerialCommand to exit AT/USB/Serial mode
+*/
+/**************************************************************************/
 void goToMenu() {
   Serial.println("Exiting");
   setState(&menuState);
 }
 
-void initUSB(){
+/**************************************************************************/
+/*!
+    @brief  Sets up for AT/USB/Serial mode 
+*/
+/**************************************************************************/
+void enterUSBMode() {
+  drawFullScreenIcon(usbConnector);
+  
   sCmd.addCommand("!AT+CFGOTAA", setOtaaKeys);    
   sCmd.addCommand("!AT+CFGABP", setAbpKeys);
   sCmd.addCommand("!AT+HWEUI?", getHweui);
   sCmd.addCommand("!AT+EXIT", goToMenu);
-}
-
-void enterUSBMode() {
-  drawFullScreenIcon(usbConnector);
-  initUSB();
+  
   Serial.println("USB MODE");
 }
 
+/**************************************************************************/
+/*!
+    @brief  Checks for commands on the serial line
+*/
+/**************************************************************************/
 void usbSpin() {
   sCmd.readSerial();
 }
