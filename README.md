@@ -14,7 +14,7 @@ This is designed to work with the following hardware:
   - [NeoGPS]
   - [RN2483] (Forked from arduino-device-lib by TTN)
   - [FlashStorage]
-  - [Arduino Serial Command] (Already included as we overode bits)
+  - [Arduino Serial Command] (Already included as we overwritten bits)
   - [Adafruit GFX]
   - [Adafruit ST7735]
  
@@ -23,12 +23,12 @@ Hardware specific changes can be made to the "hardware.h" file. Upload this sket
 
 ## Instructions for Use
 On boot you will be presented with the "Menu" screen containing the following functions:
-  - Survey
-  - Sweep  
-  - Settings
-  - USB
+  - [Survey](#survey)
+  - [Sweep](#sweep)  
+  - [Settings](#settings)  
+  - [USB](#usb)
  
-You can move between menu items by pushing up/down on the joystick. Click the joystick to activate the currently selected item. "Survey" and "Sweep" will not be available (marked with an 'X', rather than '>') if the required LoRaWAN network keys for the currently selected join mode are not present; see [usb](#usb) and [settings](#join)
+You can move between menu items by pushing up/down on the joystick. Click the joystick to activate the currently selected item. "Survey" and "Sweep" will not be available (marked with an 'X', rather than '>') if the required LoRaWAN network keys for the currently selected join mode are not present; see [USB](#usb) and [Settings - join](#join)
   
 #### Survey
 "Survey" is a mode that utlises the current device settings to perform periodic or manual transmissions. If the device has been requested to connect using "Over The Air Activation", and is currently not connected to a network, upon entering this mode the device will first attempt to join a network using the internal device keys. "Survey" mode is great for performing "war driving" tests.
@@ -42,10 +42,10 @@ From this menu you can either push left on the joystick to intiate a new test or
 
 #### Settings
 "Settings" lets you configure the runtime settings of the device. Upon entering this menu option you will be presented with the following configurable settings:
-  - Join
-  - SF  
-  - TX IVL
-  - Exit
+  - [Join](#join)
+  - [SF](#sf)  
+  - [TX IVL](#TX IVL)
+  - [Exit](#Exit)
   
 Pushing right or left on the joystick of a currently selected setting will alter that setting. Pushing up or down on the joystick allows you to move between different settings. 
 
@@ -60,7 +60,7 @@ Choosing between OTAA is your choice and if you have provisioned your device wit
 "SF" (Spread Factor) allows you to adjust the spread factor used for joins and survey transmissions. Selectable spreadfactors range from 7 to 12 (data rates 5 to 0). This [spreadfactor video] explains spreadfactor and its influence.
 
 ##### TX IVL
-"TX IVL" (TX Interval) allows you to adjust the frequency of periodic transmissions whilst in "Survey" mode. The available options are: Man, 1 second, 2 seconds, 5 seconds, 10 seconds, 30 seconds, 1 minute, 2 minutes, 5 minutes, 10 minutes. When set to "Man" (Manual), the device will not perform periodic transmission; instead, it will require manual activation. 
+"TX IVL" (TX Interval) allows you to adjust the frequency of periodic transmissions whilst in "Survey" mode. The available options are: Man, 1 second, 2 seconds, 5 seconds, 10 seconds, 30 seconds, 1 minute, 2 minutes, 5 minutes, 10 minutes. When set to "Man" (Manual), the device will not perform periodic transmission; instead, it will require manual activation by clicking the joystick. 
 
 ##### Exit
 Exits the "Settings" menu if the joystick is clicked when this option is currently selected. Upon leaving the "Settings" menu you will be asked if you wish to "Save as Default?" the current settings. Selecting "Yes" will store the settings on the internal flash, allowing them to persist between device restarts. The flash is limited to around 10K writes. Selecting "No" means the current settings will only persist until the device restarts (at which point the default settings will be restored).
@@ -70,10 +70,10 @@ Exits the "Settings" menu if the joystick is clicked when this option is current
 
 The commands available in this mode are:
 
-- !AT+CFGOTAA
-- !AT+CFGABP
-- !AT+HWEUI?
-- !AT+EXIT
+- [!AT+CFGOTAA](#!AT+CFGOTAA [appEui] [appKey])
+- [!AT+CFGABP](!AT+CFGOTAA [devAddr] [NwksKey] [AppsKey])
+- [!AT+HWEUI?](!AT+HWEUI?)
+- [!AT+EXIT](!AT+EXIT)
 
 When a command expects one or more parameters, the start of each parameter is delimited with a space. A new line and carriage return is required to send the command to the device.
 
@@ -105,7 +105,4 @@ GNU Ver 3.
 [Adafruit ST7735]: https://github.com/adafruit/Adafruit-ST7735-Library
 [Adafruit SAMD]: https://learn.adafruit.com/adafruit-feather-m0-basic-proto/using-with-arduino-ide
 [Spreadfactor video]: https://www.youtube.com/watch?v=B580NvdXtjs
-
-
-
 
