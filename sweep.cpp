@@ -29,7 +29,10 @@ state sweepErrorState = {
 };
 
 void initSweep() {
-  loraJoinIfNeeded();
+  if(!loraJoinIfNeeded()) {
+    setState(&menuState);
+    return;
+  }
   
   setLineInverted(0, true);
   setLineInverted(1, false);

@@ -5,11 +5,15 @@
 #include "screen.h"
 #include "settings.h"
 #include "joystick.h"
+#include "menu.h"
 
 long nextPing;
 
 void initSurvey() {
-  loraJoinIfNeeded();
+  if(!loraJoinIfNeeded()) {
+    setState(&menuState);
+    return;
+  }
   
   setLineInverted(0, true);
   setLineInverted(1, false);
@@ -25,8 +29,11 @@ void initSurvey() {
   snprintf(buffer, 20, "%ddBM", getTransmitPower());
   drawText(97, 2, buffer);
   drawText(5, 3, "RX Qual.");
-
-  nextPing = millis() + getTransmitInterval();
+  
+  if(getTransmitInterval())
+    nextPing = millis() + 1000;
+  else
+    drawText(2, 3, "Press to Scan");
 }
 
 void doPing(boolean manual) {
@@ -64,9 +71,18 @@ void spinSurvey() {
       doPing(false);
       nextPing = millis() + getTransmitInterval();
     }
+    if(readJoystick() == JOY_LEFT)
+      setState(&menuState);
   } else { //if manual mode
-    if(readJoystick() == JOY_PRESSED)
-      doPing(true);
+    switch(readJoystick()) {
+      case JOY_PRESSED:
+        doPing(true);
+        break;
+      case JOY_LEFT:
+        setState(&menuState);
+        break;
+    }
+      
   }
 }
 
