@@ -57,6 +57,8 @@ void initMenuState() {
 */
 /**************************************************************************/
 void menuStateLoop() {
+  drawGPSIcon();
+  drawBatteryIcon();
   joyState joy = readJoystick();
   switch(joy) {
     case JOY_PRESSED:

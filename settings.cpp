@@ -112,15 +112,15 @@ int settingsCursor = 1;
 */
 /**************************************************************************/
 void initExitState() {
-  setLineInverted(0, true);
+  setLineInverted(0, false);
   setLineInverted(1, true);
   setLineInverted(2, true);
   setLineInverted(3, true);
   setLineInverted(4, true);
   clearScreen();
 
-  drawText(38, 1, "Save As");
-  drawText(32, 2, "Default?");
+  drawText(38, 2, "Save As");
+  drawText(32, 3, "Default?");
   drawText(28+80, 4, "No");
   setLineInverted(4, false);
   clearSpace(0,4, 80);
@@ -135,6 +135,8 @@ void initExitState() {
 */
 /**************************************************************************/
 void loopExitState() {
+  drawGPSIcon();
+  drawBatteryIcon();
   switch(readJoystick()) {
     case JOY_PRESSED:
       if(!settingsCursor) //if YES
@@ -315,7 +317,7 @@ void initSettingsState() {
   setLineInverted(3, true);
   setLineInverted(4, true);
   clearScreen();
-  drawText(32, 0, "Settings");
+  drawText(30, 0, "Settings");
   drawText(20,1,"Join");
   drawText(20,2,"SF");
   drawText(20,3,"Tx IVL");
@@ -367,6 +369,8 @@ void moveCursorSettings(int newLine) {
 */
 /**************************************************************************/
 void settingsStateLoop() {
+  drawGPSIcon();
+  drawBatteryIcon();
   joyState joy = readJoystick();
   switch(joy) {
     case JOY_PRESSED:
