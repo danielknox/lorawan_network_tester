@@ -31,7 +31,7 @@ char* sfToText(spread_factor sf);
 
 void hardwareReset();
 void initLorawan();
-
+size_t getHweui(char *buffer, size_t size);
 bool loraJoinIfNeeded();
 
 bool loraIsJoined();
