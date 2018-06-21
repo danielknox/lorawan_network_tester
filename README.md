@@ -1,10 +1,8 @@
-
-RaWAN Tester
+# LoRaWAN Tester
 
 A network tester for LoRaWAN networks.
 
 ## Setup
-----
 This is designed to work with the following hardware:
   - Adafruit Feather M0 (ATSAMD21)
   - Microchip RN2483
@@ -13,27 +11,24 @@ This is designed to work with the following hardware:
   - 1.8TFT ST7735 Display
 
 #### Required Libraries!
-
   - [NeoGPS]
   - [RN2483] (Forked from arduino-device-lib by TTN)
   - [FlashStorage]
-  - [Arduino Serial Command]
+  - [Arduino Serial Command] (Already included as we overwritten bits)
   - [Adafruit GFX]
   - [Adafruit ST7735]
  
 #### Installation and Configuration
-
 Hardware specific changes can be made to the "hardware.h" file. Upload this sketch to your Feather M0 using the Arduino IDE. Your IDE must have the [Adafruit SAMD] boards support added for this to work.  
 
 ## Instructions for Use
-----
 On boot you will be presented with the "Menu" screen containing the following functions:
-  - Survey
-  - Sweep  
-  - Settings
-  - USB
+  - [Survey](#survey)
+  - [Sweep](#sweep)  
+  - [Settings](#settings)  
+  - [USB](#usb)
  
-You can move between menu items by pushing up/down on the joystick. Click the joystick to activate the currently selected item. "Survey" and "Sweep" will not be available if the required LoRaWAN network keys for the currently selected join mode are not present; see [usb](#usb) and [settings](#settings)
+You can move between menu items by pushing up/down on the joystick. Click the joystick to activate the currently selected item. "Survey" and "Sweep" will not be available (marked with an 'X', rather than '>') if the required LoRaWAN network keys for the currently selected join mode are not present; see [USB](#usb) and [Settings - join](#join)
   
 #### Survey
 "Survey" is a mode that utlises the current device settings to perform periodic or manual transmissions. If the device has been requested to connect using "Over The Air Activation", and is currently not connected to a network, upon entering this mode the device will first attempt to join a network using the internal device keys. "Survey" mode is great for performing "war driving" tests.
@@ -47,11 +42,11 @@ From this menu you can either push left on the joystick to intiate a new test or
 
 #### Settings
 "Settings" lets you configure the runtime settings of the device. Upon entering this menu option you will be presented with the following configurable settings:
-  - Join
-  - SF  
-  - TX IVL
-  - Exit
- 
+  - [Join](#join)
+  - [SF](#sf)  
+  - [TX IVL](#TX%20IVL)
+  - [Exit](#Exit)
+  
 Pushing right or left on the joystick of a currently selected setting will alter that setting. Pushing up or down on the joystick allows you to move between different settings. 
 
 ##### Join 
@@ -62,12 +57,43 @@ Choosing between OTAA is your choice and if you have provisioned your device wit
 **The "join-procedure" is only initiated when you enter "Survey" or "Sweep", so you can configure this setting at anytime.**
 
 ##### SF
-"SF" (Spread Factor) allows you to adjust the spread factor used for joins and transmissions -- obviously, "sweep" mode ignores this setting! 
+"SF" (Spread Factor) allows you to adjust the spread factor used for joins and survey transmissions. Selectable spreadfactors range from 7 to 12 (data rates 5 to 0). This [spreadfactor video] explains spreadfactor and its influence.
 
-Selectable spreadfactors range from 7 to 12 (data rates 5 to 0). This [spreadfactor video] explains spreadfactor and its influence.
+##### TX IVL
+"TX IVL" (TX Interval) allows you to adjust the frequency of periodic transmissions whilst in "Survey" mode. The available options are: Man, 1 second, 2 seconds, 5 seconds, 10 seconds, 30 seconds, 1 minute, 2 minutes, 5 minutes, 10 minutes. When set to "Man" (Manual), the device will not perform periodic transmission; instead, it will require manual activation by clicking the joystick. 
 
-License
-----
+##### Exit
+Exits the "Settings" menu if the joystick is clicked when this option is currently selected. Upon leaving the "Settings" menu you will be asked if you wish to "Save as Default?" the current settings. Selecting "Yes" will store the settings on the internal flash, allowing them to persist between device restarts. The flash is limited to around 10K writes. Selecting "No" means the current settings will only persist until the device restarts (at which point the default settings will be restored).
+
+#### USB
+"USB" mode allows you to configure the device using the serial interface (e.g. the one provided by the Arduino IDE, CoolTERM, etc.). Upon entering this mode, you will be able to send a commands to the device. This is how you **provision** the device with the required network keys.
+
+The commands available in this mode are:
+
+- [!AT+CFGOTAA](#!AT+CFGOTAA%20[appEui]%20[appKey])
+- [!AT+CFGABP](!AT+CFGOTAA%20[devAddr]%20[NwksKey]%20[AppsKey])
+- [!AT+HWEUI?](!AT+HWEUI?)
+- [!AT+EXIT](!AT+EXIT)
+
+When a command expects one or more parameters, the start of each parameter is delimited with a space. A new line and carriage return is required to send the command to the device.
+
+##### !AT+CFGOTAA [appEui] [appKey]
+Configures the keys required for OTAA (Over the Air Activation). This command expects 16 characters for the appEui and 32 characters for the appKey. These should be available from your network server. In some cases appEui is not provided, in these cases try using "0000000000000000". Spaces are used to mark the start of each key, you do not need the quotes or brackets! 
+
+This command should return "OK" if the device accepted and saved the keys to the RN2483 (this will persist between restarts). It will return invalid if there is a problem with your keys (e.g. you didn't specify one / wrong length) or the RN2483 rejected them.
+
+##### !AT+CFGOTAA [devAddr] [NwksKey] [AppsKey]
+Configures the keys required for ABP (Activation by Personalisation). This command expects 8 characters for the devAddr, 32 characters for the NwksKey and 32 characters for the AppsKey. These should be available from your network server. Spaces are used to mark the start of each key, you do not need the quotes or brackets! 
+
+This command should return "OK" if the device accepted and saved the keys to the RN2483 (this will persist between restarts). It will return invalid if there is a problem with your keys (e.g. you didn't specify one / wrong length) or the RN2483 rejected them.
+
+##### !AT+HWEUI?
+This commands returns the hardware EUI of the RN2483. This is required when registering a device with a network server. We use the HWEUI and this is unique to the RN2483, rather than depending on the user to try and come up with their own.
+
+##### !AT+EXIT
+This commands exits "USB" mode and returns you to the main menu.
+
+## License
 
 GNU Ver 3.
 
