@@ -44,7 +44,7 @@ From this menu you can either push left on the joystick to intiate a new test or
 "Settings" lets you configure the runtime settings of the device. Upon entering this menu option you will be presented with the following configurable settings:
   - [Join](#join)
   - [SF](#sf)  
-  - [TX IVL](#TX IVL)
+  - [TX IVL](#TX%20IVL)
   - [Exit](#Exit)
   
 Pushing right or left on the joystick of a currently selected setting will alter that setting. Pushing up or down on the joystick allows you to move between different settings. 
@@ -70,8 +70,8 @@ Exits the "Settings" menu if the joystick is clicked when this option is current
 
 The commands available in this mode are:
 
-- [!AT+CFGOTAA](#!AT+CFGOTAA [appEui] [appKey])
-- [!AT+CFGABP](!AT+CFGOTAA [devAddr] [NwksKey] [AppsKey])
+- [!AT+CFGOTAA](#!AT+CFGOTAA%20[appEui]%20[appKey])
+- [!AT+CFGABP](!AT+CFGOTAA%20[devAddr]%20[NwksKey]%20[AppsKey])
 - [!AT+HWEUI?](!AT+HWEUI?)
 - [!AT+EXIT](!AT+EXIT)
 
