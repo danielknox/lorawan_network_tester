@@ -4,6 +4,7 @@
 #include "state.h"
 #include "gps.h"
 #include "lorawan.h"
+#include "settings.h"
 
 void setup() {
   Serial.begin(115200);
@@ -11,6 +12,7 @@ void setup() {
   initLorawan();
   initScreen();
   initJoystick();
+  loadSettings();
   setState(&menuState);
 }
 
