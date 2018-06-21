@@ -1,9 +1,8 @@
-LoRaWAN Tester
+# LoRaWAN Tester
 
 A network tester for LoRaWAN networks.
 
 ## Setup
-----
 This is designed to work with the following hardware:
   - Adafruit Feather M0 (ATSAMD21)
   - Microchip RN2483
@@ -12,7 +11,6 @@ This is designed to work with the following hardware:
   - 1.8TFT ST7735 Display
 
 #### Required Libraries!
-
   - [NeoGPS]
   - [RN2483] (Forked from arduino-device-lib by TTN)
   - [FlashStorage]
@@ -21,24 +19,21 @@ This is designed to work with the following hardware:
   - [Adafruit ST7735]
  
 #### Installation and Configuration
-
 Hardware specific changes can be made to the "hardware.h" file. Upload this sketch to your Feather M0 using the Arduino IDE. Your IDE must have the [Adafruit SAMD] boards support added for this to work.  
 
 ## Instructions for Use
-----
 On boot you will be presented with the "Menu" screen containing the following functions:
   - Survey
   - Sweep  
   - Settings
   - USB
  
-You can move between menu items by pushing up/down on the joystick. Click the joystick to activate the currently selected item. "Survey" and "Sweep" will not be available (marked with an 'X', rather than '>') if the required LoRaWAN network keys for the currently selected join mode are not present; see [usb](#usb) and [settings](#####Join)
+You can move between menu items by pushing up/down on the joystick. Click the joystick to activate the currently selected item. "Survey" and "Sweep" will not be available (marked with an 'X', rather than '>') if the required LoRaWAN network keys for the currently selected join mode are not present; see [usb](#usb) and [settings](#join)
   
 #### Survey
 "Survey" is a mode that utlises the current device settings to perform periodic or manual transmissions. If the device has been requested to connect using "Over The Air Activation", and is currently not connected to a network, upon entering this mode the device will first attempt to join a network using the internal device keys. "Survey" mode is great for performing "war driving" tests.
 
 #### Sweep
-
 "Sweep" is a mode that causes the device to send a transmission at each spreadfactor (SF7 - SF12, i.e. DR5 - D0); this collection of transmissions is referred to as a 'test'. This mode is useful for testing connectivity at a specific location (e.g. before deploying a sensor). If the device has been requested to connect using "Over The Air Activation", and is currently not connected to a network, upon entering this mode the device will first attempt to join a network using the internal device keys. Because of duty cycle limitations, the device may have to wait for a free-channel before it can attempt a transmission at a specific spreadfactor. During this time the device will state "No Free Chan. Cancel Test?", clicking the joystick will cancel the current and subsequent transmissions left in the test.
 
 At the end of the test the results will be displayed on the screen. Transmissions that were successful and therefore recieved an acknowledgement from a network server will be presented as black text on a white background. Transmissions that were not successful, because they did not recieve an acknowledgement, will be presented as white text on a black background.  
@@ -99,7 +94,6 @@ This commands returns the hardware EUI of the RN2483. This is required when regi
 This commands exits "USB" mode and returns you to the main menu.
 
 ## License
-----
 
 GNU Ver 3.
 
@@ -111,4 +105,7 @@ GNU Ver 3.
 [Adafruit ST7735]: https://github.com/adafruit/Adafruit-ST7735-Library
 [Adafruit SAMD]: https://learn.adafruit.com/adafruit-feather-m0-basic-proto/using-with-arduino-ide
 [Spreadfactor video]: https://www.youtube.com/watch?v=B580NvdXtjs
+
+
+
 
