@@ -41,11 +41,11 @@ You can move between menu items by pushing up/down on the joystick. Click the jo
 ![Survey Image](https://raw.githubusercontent.com/danielknox/lorawan_network_tester/master/images/survey.png "Fig 2. Survey")
 
 1. GPS Status (Disconnected)
-2. Spread Factor of current transmission
+2. Spread factor of current transmission
 3. Battery Status (Half-full)
 4. The current operation frequency of the device
 5. The current transmission power of the device
-6. "Press to Ccan" when in manual mode / Gateway Results when TX successful ([Sweep](#sweep), See 3 and 8)
+6. "Press to Scan" when in manual mode / RX Qual results when TX successful and acknowledged ([Sweep](#sweep), See 3 and 8)
 
 Pushing the joystick to the left when in survey mode will return the device to the [menu](#menu) 
 
@@ -55,7 +55,7 @@ Pushing the joystick to the left when in survey mode will return the device to t
 ![Sweep Image](https://raw.githubusercontent.com/danielknox/lorawan_network_tester/master/images/sweep.png "Fig 3. Sweep")
 
 1. GPS Status (Connected)
-2. Spread Factor of current transmission
+2. Spread factor of current transmission
 3. The current link margin, calculated from the signal recieve strength
 4. The device is actively transmitting
 5. Battery Status (Half-full)
@@ -70,10 +70,10 @@ From this menu you can either push left on the joystick to intiate a new test or
 ![Sweep Results](https://raw.githubusercontent.com/danielknox/lorawan_network_tester/master/images/sweep%20results.png "Fig 4. Sweep Results")
 
 1. GPS Status (Connected)
-2. Spreadfactors that were not acknowledged
+2. Spread factors that were **not** acknowledged
 3. Start a new test
 4. Battery Status (Half-full)
-5. Spreadfactors that were acknowledged
+5. Spread factors that were acknowledged
 6. Return to [menu](#menu)
 
 #### Settings
