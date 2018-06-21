@@ -95,6 +95,11 @@ int sfToNum(spread_factor sf) {
 //  }
 }
 
+/**************************************************************************/
+/*!
+    @brief  Ease of use to convert the spread factors numeric value back to its enum form.
+*/
+/**************************************************************************/
 spread_factor numToSF(int num) {
   return num>=7 && num<=12 ? (spread_factor)num : SF_7;
 }
@@ -182,8 +187,8 @@ bool loraNetworkConnection() {
 
 /**************************************************************************/
 /*!
-   @brief  Transmit the data payload
-   @return Returns true if successful transmission (not necessaryily confirmed), else return false as their was a failure (perhaps duty cycle restriction?)
+   @brief  Transmit the data payload. results frequency is populated if the payload was successfully transmitted. The noise and gateway count values are populated if the message is confirmed by the gateway.
+   @return Returns TEST_SUCCESS if transmission was successfult and confirmed; TEST_FAIL on a successful transmit, but no confirmation or TEST_ERROR ion hardware issue and duty cycle restrictions
 */
 /**************************************************************************/
 transmit_responce loraTransmit(bool manual, spread_factor sf, transmit_result& result) {

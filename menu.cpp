@@ -13,6 +13,11 @@
 
 int cursor;
 
+/**************************************************************************/
+/*!
+   @brief  Sets up the screen for the main menu
+*/
+/**************************************************************************/
 void initMenuState() {
   cursor = 1;
   setLineInverted(0, false);
@@ -29,12 +34,22 @@ void initMenuState() {
   drawText(POINTER_OFFSET,cursor,">");
 }
 
+/**************************************************************************/
+/*!
+   @brief  Ease of use function for moving the curso on screen
+*/
+/**************************************************************************/
 void moveCursor(int newLine) {
   clearSpace(0,cursor,20);
   cursor = newLine;
   drawText(POINTER_OFFSET,cursor,">");
 }
 
+/**************************************************************************/
+/*!
+   @brief  Checks the yostick for inputs and updates the screen or changes state accordingly
+*/
+/**************************************************************************/
 void menuStateLoop() {
   joyState joy = readJoystick();
   switch(joy) {
