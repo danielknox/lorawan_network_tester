@@ -49,6 +49,8 @@ void doPing(boolean manual) {
       drawText(64, 1, buffer);
       snprintf(buffer, 20, "%ddBM", res.noise);
       drawText(5, 4, buffer);
+      snprintf(buffer, 20, "GW %d", res.gateways);
+      drawText(95, 4, buffer);
       break;
 
     case TEST_FAIL:
