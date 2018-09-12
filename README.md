@@ -17,7 +17,7 @@ This is designed to work with the following hardware:
   - [Arduino Serial Command] (Already included as we overwritten bits)
   - [Adafruit GFX]
   - [Adafruit ST7735]
-  - [Axis Joystick] by Yurrii Salimov (Found in Arduino Library manager)
+  - [Axis Joystick]
  
 #### Installation and Configuration
 Hardware specific changes can be made to the "hardware.h" file. Upload this sketch to your Feather M0 using the Arduino IDE. Your IDE must have the [Adafruit SAMD] boards support added for this to work.  
@@ -142,4 +142,5 @@ GNU Ver 3.
 [Adafruit ST7735]: https://github.com/adafruit/Adafruit-ST7735-Library
 [Adafruit SAMD]: https://learn.adafruit.com/adafruit-feather-m0-basic-proto/using-with-arduino-ide
 [Spreadfactor video]: https://www.youtube.com/watch?v=B580NvdXtjs
+[Axis Joystick]: https://github.com/YuriiSalimov/AxisJoystick
 
