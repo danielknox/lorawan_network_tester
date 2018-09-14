@@ -38,7 +38,7 @@ bool isDeviceProvisioned(){
     char currentAppEUI[8];
     if(lorawan.getAppEui(currentAppEUI,8)==8) return true; // We can only check if there is an appEUI, the RN2483 does not let us read keys.
   } else {
-    if(lorawan.personalize()) return true;
+    if(lorawan.checkPersonalize()) return true;
   }
   return false;
 }
@@ -66,6 +66,7 @@ bool provisionOTAA(const char *appEui, const char *appKey){
 /**************************************************************************/
 bool provisionABP(const char *devAddr, const char *nwkSKey, const char *appSKey){
   return lorawan.personalize(devAddr, nwkSKey, appSKey);
+  
 }
 
 /**************************************************************************/

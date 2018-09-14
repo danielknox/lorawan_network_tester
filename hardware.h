@@ -2,8 +2,8 @@
 
 // Joystick
 #define JOYSTICK_FIRE_PIN  5
-#define JOYSTICK_X_PIN A0
-#define JOYSTICK_Y_PIN A1
+#define JOYSTICK_X_PIN A1
+#define JOYSTICK_Y_PIN A0
 
 // LoRaWAN (RN2483)
 #define FREQ_PLAN TTN_FP_EU868
