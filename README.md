@@ -17,6 +17,7 @@ This is designed to work with the following hardware:
   - [Arduino Serial Command] (Already included as we overwritten bits)
   - [Adafruit GFX]
   - [Adafruit ST7735]
+  - [Axis Joystick]
  
 #### Installation and Configuration
 Hardware specific changes can be made to the "hardware.h" file. Upload this sketch to your Feather M0 using the Arduino IDE. Your IDE must have the [Adafruit SAMD] boards support added for this to work.  
@@ -118,7 +119,7 @@ Configures the keys required for OTAA (Over the Air Activation). This command ex
 
 This command should return "OK" if the device accepted and saved the keys to the RN2483 (this will persist between restarts). It will return invalid if there is a problem with your keys (e.g. you didn't specify one / wrong length) or the RN2483 rejected them.
 
-##### !AT+CFGOTAA [devAddr] [NwksKey] [AppsKey]
+##### !AT+CFGABP [devAddr] [NwksKey] [AppsKey]
 Configures the keys required for ABP (Activation by Personalisation). This command expects 8 characters for the devAddr, 32 characters for the NwksKey and 32 characters for the AppsKey. These should be available from your network server. Spaces are used to mark the start of each key, you do not need the quotes or brackets! 
 
 This command should return "OK" if the device accepted and saved the keys to the RN2483 (this will persist between restarts). It will return invalid if there is a problem with your keys (e.g. you didn't specify one / wrong length) or the RN2483 rejected them.
@@ -141,4 +142,5 @@ GNU Ver 3.
 [Adafruit ST7735]: https://github.com/adafruit/Adafruit-ST7735-Library
 [Adafruit SAMD]: https://learn.adafruit.com/adafruit-feather-m0-basic-proto/using-with-arduino-ide
 [Spreadfactor video]: https://www.youtube.com/watch?v=B580NvdXtjs
+[Axis Joystick]: https://github.com/YuriiSalimov/AxisJoystick
 
