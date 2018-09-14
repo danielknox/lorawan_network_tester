@@ -5,7 +5,6 @@
 #include "gps.h"
 #include "lorawan.h"
 #include "settings.h"
-#include "wiring_private.h" // pinPeripheral() function
 
 void setup() {
   Serial.begin(115200);
