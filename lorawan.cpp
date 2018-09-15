@@ -1,5 +1,4 @@
 #include "lorawan.h"
-
 #include <Arduino.h>
 #include "icons.h"
 #include "screen.h"
@@ -217,7 +216,7 @@ transmit_responce loraTransmit(bool manual, spread_factor sf, transmit_result& r
       payload[7] = (altitudeGps >> 8) & 0xFF;
       payload[8] = altitudeGps & 0xFF;
     
-      payload[9] = (locationData.hdop / 1000);
+      payload[9] = (locationData.hdop / 100);
       frameFormat.locInfo = 1;
   } else {
     frameFormat.locInfo = 0;
@@ -227,6 +226,14 @@ transmit_responce loraTransmit(bool manual, spread_factor sf, transmit_result& r
   int voltage = batteryVoltage();
   payload[10] = voltage >> 8;
   payload[11] = voltage;
+
+  // fill blanks
+  frameFormat.spare1 = 0;
+  frameFormat.spare2 = 0;
+  frameFormat.spare3 = 0;
+  frameFormat.spare4 = 0;
+  frameFormat.spare5 = 0;
+  frameFormat.spare6 = 0;
 
   payload[0] = frameFormat.packed;
   
