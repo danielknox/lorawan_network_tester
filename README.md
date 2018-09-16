@@ -6,7 +6,7 @@ A network tester for LoRaWAN networks.
 This is designed to work with the following hardware:
   - Adafruit Feather M0 (ATSAMD21)
   - Microchip RN2483
-  - GPS (e.g. neo8m)
+  - GPS (nema encoding e.g. Ubox or Quectel L80)
   - Analog joystick.
   - 1.8TFT ST7735 Display
 
