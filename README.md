@@ -135,11 +135,11 @@ This commands exits "USB" mode and returns you to the main menu.
 GNU Ver 3.
 
 ## Credits
-Icons used:
-USB - Icon made by Smashicons from www.flaticon.com 
-Battery - Icon made by Smashicons from www.flaticon.com 
-Satellite - Icon made by FreePic from www.flaticon.com 
-Transmitting - Icon made by photo3idea_studio from www.flaticon.com 
+- Icons used:
+- USB - Icon made by Smashicons from www.flaticon.com 
+- Battery - Icon made by Smashicons from www.flaticon.com 
+- Satellite - Icon made by FreePic from www.flaticon.com 
+- Transmitting - Icon made by photo3idea_studio from www.flaticon.com 
 
 [NeoGPS]: <https://github.com/SlashDevin/NeoGPS>
 [RN2483]: https://github.com/danielknox/arduino-device-lib
