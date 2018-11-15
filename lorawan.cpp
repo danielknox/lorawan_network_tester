@@ -78,6 +78,16 @@ int getTransmitPower() {
 
 /**************************************************************************/
 /*!
+    @brief  Read back the SNR of the last recieved packet
+*/
+/**************************************************************************/
+int getSNR() {
+  return lorawan.getSNR();
+}
+
+
+/**************************************************************************/
+/*!
     @brief  Converts a spread factor to a numerical representation
 */
 /**************************************************************************/
@@ -243,12 +253,12 @@ transmit_responce loraTransmit(bool manual, spread_factor sf, transmit_result& r
       return TEST_ERROR;
     
     case TTN_ERROR_UNEXPECTED_RESPONSE:
-      result.freq = lorawan.getFreq()/1000000;
+      result.freq = lorawan.getFreq()/1000000.0f;
       return TEST_FAIL;
     
     case TTN_SUCCESSFUL_RECEIVE:
     case TTN_SUCCESSFUL_TRANSMISSION:
-      result.freq = lorawan.getFreq()/1000000;
+      result.freq = lorawan.getFreq()/1000000.0f;
       result.noise = lorawan.getLinkCheckMargin();
       result.gateways = lorawan.getLinkCheckGateways();
       return TEST_SUCCESS;
