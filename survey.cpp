@@ -65,7 +65,7 @@ void doPing(boolean manual) {
       drawText(5, 4, buffer);
       // Alternates drawing of tx linkmargin, no gateways and tx sf, dbm
       for(int i=0; i<TX_INFO_LOOP_SECONDS; i++) {
-          clearLine(2); res.noise
+          clearLine(2);
           if(gwINFO){
             snprintf(buffer, 20, "%ddBM", res.noise);
             drawText(5, 2, buffer);
