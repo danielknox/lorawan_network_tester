@@ -62,18 +62,18 @@ transmit_responce testSF(spread_factor sf) {
   int errorAttempt = 0;
   transmit_result res;
   char buffer[20];
-  clearLine(2);
-  drawText(5, 2, sfToText(sf));
-  snprintf(buffer, 20, "%ddBM", getTransmitPower());
-  drawText(97, 2, buffer);
   drawSmallIcon(25, 0, 24, 24, transmitting);
   clearLine(4);
   while(1) {
     switch(loraTransmit(false, sf, res)) {
       case TEST_SUCCESS:
+        clearLine(2);
+        drawText(5, 2, sfToText(sf));
+        snprintf(buffer, 20, "%ddBM", getTransmitPower());
+        drawText(97, 2, buffer);
         clearSpace(25, 0, 25);
         clearSpace(50, 1, 160);
-        snprintf(buffer, 20, "%3d.%dMHz", (int)res.freq, (int)(res.freq*10)%10);
+        snprintf(buffer, 20, "%3.1fMHz", res.freq);
         drawText(64, 1, buffer);
         snprintf(buffer, 20, "%ddBM", res.noise);
         drawText(5, 4, buffer);
@@ -82,11 +82,19 @@ transmit_responce testSF(spread_factor sf) {
         return TEST_SUCCESS;
   
       case TEST_FAIL:
+        clearLine(2);
+        drawText(5, 2, sfToText(sf));
+        snprintf(buffer, 20, "%ddBM", getTransmitPower());
+        drawText(97, 2, buffer);
         clearSpace(25, 0, 25);
         drawText(5, 4, "Fail");
         return TEST_FAIL;
 
       case TEST_ERROR:
+        clearLine(2);
+        drawText(5, 2, sfToText(sf));
+        snprintf(buffer, 20, "%ddBM", getTransmitPower());
+        drawText(97, 2, buffer);
         clearSpace(25, 0, 25);
         for(int i=0; i<NO_CHANNEL_DELAY_SECONDS; i++) {
           if(readJoystick()==JOY_PRESSED)

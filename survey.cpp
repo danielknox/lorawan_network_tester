@@ -6,6 +6,7 @@
 #include "settings.h"
 #include "joystick.h"
 #include "menu.h"
+#define TX_INFO_LOOP_SECONDS     (4)
 
 long nextPing;
 
@@ -30,9 +31,7 @@ void initSurvey() {
   
   char buffer[20];
   drawText(5, 1, "TX");
-  drawText(5, 2, sfToText(getSpreadFactor()));
-  snprintf(buffer, 20, "%ddBM", getTransmitPower());
-  drawText(97, 2, buffer);
+
   drawText(5, 3, "RX Qual.");
   
   if(getTransmitInterval())
@@ -51,27 +50,64 @@ void doPing(boolean manual) {
   drawSmallIcon(25, 0, 24, 24, transmitting);
   transmit_result res;
   clearLine(4);
+  char buffer[20];
+  boolean gwINFO = false;
+  unsigned long starttime;
+  unsigned long endtime;
   switch(loraTransmit(manual, getSpreadFactor(), res)) {
     case TEST_SUCCESS:
-      char buffer[20];
       clearSpace(25, 0, 25);
       clearSpace(50, 1, 160);
-      snprintf(buffer, 20, "%3d.%dMHz", (int)res.freq, (int)(res.freq*10)%10);
+      snprintf(buffer, 20, "%3.1fMHz", res.freq);
       drawText(64, 1, buffer);
-      snprintf(buffer, 20, "%ddBM", res.noise);
+      clearLine(4);
+      snprintf(buffer, 20, "%ddBM", getSNR());
       drawText(5, 4, buffer);
-      snprintf(buffer, 20, "GW %d", res.gateways);
-      drawText(95, 4, buffer);
+      // Alternates drawing of tx linkmargin, no gateways and tx sf, dbm
+      for(int i=0; i<TX_INFO_LOOP_SECONDS; i++) {
+          clearLine(2); res.noise
+          if(gwINFO){
+            snprintf(buffer, 20, "%ddBM", res.noise);
+            drawText(5, 2, buffer);
+            snprintf(buffer, 20, "GW %d", res.gateways);
+            drawText(95, 2, buffer);
+            gwINFO = false;
+          }
+          else {
+            drawText(5, 2, sfToText(getSpreadFactor()));
+            snprintf(buffer, 20, "%ddBM", getTransmitPower());
+            drawText(97, 2, buffer);
+            gwINFO = true;
+          }
+          starttime = millis();
+          endtime = starttime;
+          while ((endtime - starttime) <=1000) // do this loop for up to 1000mS
+          {
+            if(readJoystick()==JOY_PRESSED){
+              doPing(true);
+              return;
+            }
+            endtime = millis();
+          }
+      }
       break;
 
     case TEST_FAIL:
+      clearLine(2);
+      drawText(5, 2, sfToText(getSpreadFactor()));
+      snprintf(buffer, 20, "%ddBM", getTransmitPower());
+      drawText(97, 2, buffer);
       clearSpace(25, 0, 25);
       drawText(5, 4, "Fail");
       break;
 
     case TEST_ERROR:
+      clearLine(2);
+      drawText(5, 2, sfToText(getSpreadFactor()));
+      snprintf(buffer, 20, "%ddBM", getTransmitPower());
+      drawText(97, 2, buffer);
       clearSpace(25, 0, 25);
-      drawText(5, 4, "Error");
+      drawText(5, 4, "No Free Chan");
       break;
   }
 }
