@@ -6,6 +6,7 @@
 #include "menu.h"
 #include <FlashStorage.h>
 #include "joystick.h"
+#include "gps.h"
 
 typedef struct {
   boolean valid;
@@ -135,6 +136,7 @@ void initExitState() {
 */
 /**************************************************************************/
 void loopExitState() {
+  feedGPS();
   drawGPSIcon();
   drawBatteryIcon();
   switch(readJoystick()) {
@@ -369,6 +371,7 @@ void moveCursorSettings(int newLine) {
 */
 /**************************************************************************/
 void settingsStateLoop() {
+  feedGPS();
   drawGPSIcon();
   drawBatteryIcon();
   joyState joy = readJoystick();

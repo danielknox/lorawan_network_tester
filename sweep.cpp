@@ -6,6 +6,8 @@
 #include "settings.h"
 #include "joystick.h"
 #include "menu.h"
+#include "gps.h"
+
 
 #define DELAY_BETWEEN_TESTS_MS    (4000)
 #define NO_CHANNEL_DELAY_SECONDS     (8)
@@ -118,6 +120,7 @@ transmit_responce testSF(spread_factor sf) {
 */
 /**************************************************************************/
 void spinSweep() {
+  feedGPS();
   drawGPSIcon();
   drawBatteryIcon();
   if(readJoystick() == JOY_PRESSED) {
@@ -132,6 +135,7 @@ void spinSweep() {
       return;
     }
     sfSuccess[0] = tr==TEST_SUCCESS;
+    feedGPS();
     drawGPSIcon();
     drawBatteryIcon();
     delay(DELAY_BETWEEN_TESTS_MS);
@@ -140,6 +144,7 @@ void spinSweep() {
       return;
     }
     sfSuccess[1] = tr==TEST_SUCCESS;
+    feedGPS();
     drawGPSIcon();
     drawBatteryIcon();
     delay(DELAY_BETWEEN_TESTS_MS);
@@ -148,6 +153,7 @@ void spinSweep() {
       return;
     }
     sfSuccess[2] = tr==TEST_SUCCESS;
+    feedGPS();
     drawGPSIcon();
     drawBatteryIcon();
     delay(DELAY_BETWEEN_TESTS_MS);
@@ -156,6 +162,7 @@ void spinSweep() {
       return;
     }
     sfSuccess[3] = tr==TEST_SUCCESS;
+    feedGPS();
     drawGPSIcon();
     drawBatteryIcon();
     delay(DELAY_BETWEEN_TESTS_MS);
@@ -164,6 +171,7 @@ void spinSweep() {
       return;
     }
     sfSuccess[4] = tr==TEST_SUCCESS;
+    feedGPS();
     drawGPSIcon();
     drawBatteryIcon();
     delay(DELAY_BETWEEN_TESTS_MS);
@@ -172,6 +180,7 @@ void spinSweep() {
       return;
     }
     sfSuccess[5] = tr==TEST_SUCCESS;
+    feedGPS();
     drawGPSIcon();
     drawBatteryIcon();
     delay(DELAY_BETWEEN_TESTS_MS);
@@ -251,6 +260,7 @@ void initSweepError() {
 */
 /**************************************************************************/
 void spinBackMenu() {
+  feedGPS();
   drawGPSIcon();
   drawBatteryIcon();
   switch(readJoystick()) {

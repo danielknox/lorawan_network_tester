@@ -8,7 +8,7 @@
 #include "sweep.h"
 #include "survey.h"
 #include "settings.h"
-
+#include "gps.h"
 #define POINTER_OFFSET    (4)
 
 int cursor;
@@ -57,6 +57,7 @@ void initMenuState() {
 */
 /**************************************************************************/
 void menuStateLoop() {
+  feedGPS();
   drawGPSIcon();
   drawBatteryIcon();
   joyState joy = readJoystick();

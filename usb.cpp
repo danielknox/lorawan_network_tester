@@ -6,6 +6,7 @@
 #include "lorawan.h"
 #include "SerialCommand.h"
 #include "menu.h"
+#include "gps.h"
 
 SerialCommand sCmd;
 
@@ -121,6 +122,8 @@ void enterUSBMode() {
 */
 /**************************************************************************/
 void usbSpin() {
+  feedGPS();
+  hasGPSLock();
   sCmd.readSerial();
 }
 

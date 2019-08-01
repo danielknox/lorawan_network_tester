@@ -6,6 +6,7 @@
 #include "settings.h"
 #include "joystick.h"
 #include "menu.h"
+#include "gps.h"
 #define TX_INFO_LOOP_SECONDS     (4)
 
 long nextPing;
@@ -118,6 +119,7 @@ void doPing(boolean manual) {
 */
 /**************************************************************************/
 void spinSurvey() {
+  feedGPS();
   drawGPSIcon();
   drawBatteryIcon();
   if(getTransmitInterval()) {//if auto mode

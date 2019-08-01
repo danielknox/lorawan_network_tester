@@ -2,46 +2,25 @@
 
 //NeoGPS Configurations. Must be before NMEAGPS.h include!
 #define gpsPort Serial2
-#define GPS_PORT_NAME "gpsSerial"
 #define DEBUG_PORT Serial
-#define NMEAGPS_INTERRUPT_PROCESSING
-#define GPS_FIX_ALTITUDE
-#define GPS_FIX_HDOP
 
-#include <NMEAGPS.h>
-#include <Streamers.h>
+#include <TinyGPS++.h>
 #include "wiring_private.h" // pinPeripheral() function 
 #include "hardware.h"
 
 // Define additional hardware serial port on M0
 Uart Serial2 (&sercom1, GPS_SERIAL_RX, GPS_SERIAL_TX, SERCOM_RX_PAD_0, UART_TX_PAD_2);
 
-// Check neogps configuration
-
-#ifndef NMEAGPS_INTERRUPT_PROCESSING
-  #error You must define NMEAGPS_INTERRUPT_PROCESSING in NMEAGPS_cfg.h!
-#endif
-
-#ifndef GPS_FIX_ALTITUDE
-  #error You must define GPS_FIX_ALTITUDE in GPSfix_cfg.h!
-#endif
-
-#ifndef GPS_FIX_HDOP
-  #error You must define GPS_FIX_HDOP in GPSfix_cfg.h!
-#endif
-
-static NMEAGPS   gps;
-static gps_fix   fix;
+TinyGPSPlus gps;
 
 /**************************************************************************/
 /*!
-    @brief  Sercom 1 interupt handler to feed NEOGPS with characters
+    @brief  Sercom 1 interupt handler to allow Serial2 to function correctly
 */
 /**************************************************************************/
 void SERCOM1_Handler()
 {
   Serial2.IrqHandler();
-  gps.handle( Serial2.read() );
 }
 
 /**************************************************************************/
@@ -49,10 +28,21 @@ void SERCOM1_Handler()
     @brief  Starts the GPS
 */
 /**************************************************************************/
-void initGPS(){
-  gpsPort.begin( 9600 );
+void initGPS() {
+  Serial2.begin( 9600 );
   pinPeripheral(GPS_SERIAL_RX, PIO_SERCOM);
   pinPeripheral(GPS_SERIAL_TX, PIO_SERCOM);
+}
+
+/**************************************************************************/
+/*!
+    @brief  Feed the hungry GPS object. Must be called regularly.
+*/
+/**************************************************************************/
+void feedGPS() {
+  while (Serial2.available() > 0) {
+    gps.encode(Serial2.read());
+  }
 }
 
 /**************************************************************************/
@@ -62,11 +52,12 @@ void initGPS(){
 */
 /**************************************************************************/
 bool hasGPSLock() {
-  while (gps.available()) {
-    fix = gps.read();
-  }
-  if(fix.valid.location && fix.valid.altitude && fix.valid.hdop){  
-    return true;
+  // Check to see if the data-structures have useful info for use.
+  if (gps.location.isValid() && gps.altitude.isValid() && gps.hdop.isValid()) {
+    // Check to see if the data is 'fresh' (incase a fix has been lost)
+    if ((gps.location.age() < 1500) && (gps.altitude.age() < 1500) && (gps.hdop.age() < 1500)){
+      return true;
+    }
   }
   return false;
 }
@@ -74,15 +65,15 @@ bool hasGPSLock() {
 /**************************************************************************/
 /*!
     @brief  If GPS has a valid lock it will populate the passed structure with location data.
-    @param  Reference of a location struct to be populated 
+    @param  Reference of a location struct to be populated
     @return True if gps data was available, otherwise false.
 */
 /**************************************************************************/
 bool retieveGPS(loc* location) {
-   if(!hasGPSLock()) return false;
-   location->latitude = fix.latitudeL();
-   location->longitude = fix.longitudeL();
-   location->altitude = fix.altitude_cm();    
-   location->hdop = fix.hdop;
-   return true;
+  if (!hasGPSLock()) return false;
+  location->latitude = (int32_t) (gps.location.lat() * 10000000);
+  location->longitude = (int32_t) (gps.location.lng() * 10000000);
+  location->altitude = gps.altitude.value();
+  location->hdop = gps.hdop.value() * 100;
+  return true;
 }
